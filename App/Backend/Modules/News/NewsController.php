@@ -9,6 +9,7 @@
 namespace App\Backend\Modules\News;
 
 
+use FormBuilder\CommentFormBuilder;
 use \OCFram\BackController;
 use \OCFram\HTTPRequest;
 use \OCFram\Comment;
@@ -31,21 +32,13 @@ class NewsController extends BackController
 
     public function executeInsert(HTTPRequest $request)
     {
-        if($request->postExists("author"))
-        {
-            $this->processForm($request);
-        }
-
+        $this->processForm($request);
         $this->page->addVar('title', 'Ajout d\'une news');
     }
 
     public function executeUpdate(HTTPRequest $request)
     {
-        if($request->postExists("author"))
-        {
-            $this->processForm($request);
-        }
-
+        $this->processForm($request);
         $this->page->addVar('title', 'Modification d\'une news');
     }
 
@@ -63,60 +56,76 @@ class NewsController extends BackController
 
     public function processForm(HTTPRequest $request)
     {
-        $news = new News([
-            'author' => $request->postData('author'),
-            'title' => $request->postData('title'),
-            'content' => $request->postData('content')
-        ]);
 
-        if($request->postExists('id'))
+        if($request->method() == 'POST')
         {
-            $news->setId($request->postData('id'));
+            $news = new News([
+                'author' => $request->postData('author'),
+                'title' => $request->postData('title'),
+                'content' => $request->postData('content')
+            ]);
+
+            if($request->getExists('id'))
+            {
+                $news->setId($request->postData('id'));
+            }
+        }
+        else{
+            if($request->getExists('id'))
+            {
+                $news = $this->managers->getManagerOf('News')->getUnique($request->getData('id'));
+            }
+            else{
+                $news = new News;
+            }
         }
 
-        if($news->isValid())
-        {
-            $this->managers->getManagerOf('News')->save($news);
+        $formBuilder = new CommentFormBuilder($news);
+        $formBuilder->build();
 
-            $this->app->user()->setFlash($news->isNew() ? 'La news a bien été ajouté !' : 'La news a bein été modifiée !');
-        }
-        else
+        $form = $formBuilder->form();
+
+        $formHandler = new \OCFram\FormHandler($form, $this->managers->getManagerOf('News'), $request);
+
+
+        if($formHandler->process())
         {
-            $this->page->addVar('erreurs', $news->erreurs());
+            $this->user()->setFlash($news->isNew() ? 'La news a bien été ajoutée !' : 'La news a bien été modifiée !');
+            $this->app->httpResponse()->redirect('/admin/');
         }
 
-        $this->page->addVar('news', $news);
+        $this->page->addVar('form', $form->createView());
     }
 
     public function executeUpdateComment(HTTPRequest $request)
     {
         $this->page->addVar('title', 'modification d\'un commentaire');
 
-        if($request->postExists('pseudo'))
-        {
+        if($request->method() == 'POST') {
             $comment = new Comment([
-                'id' => $request-getData('id'),
+                'id' => $request - getData('id'),
                 'author' => $request->getData('author'),
                 'content' => $request->getData('content')
             ]);
-
-            if($comment->isValid())
-            {
-                $this->managers->getManagerOf('comments')->save($comment);
-                $this->app->user()->setFlash('Le commentaire a bien été modifié !');
-                $this->app->httpResponse()->redirect('/news-', $request->postData('news').'.html');
-            }
-            else
-            {
-                $this->page->addVar('erreurs', $comment->erreurs());
-            }
-
-            $this->page->addVar('comment', $comment);
         }
-        else
+        else {
+            $comment = $this->managers->getManagerOf('comments')->get($request->getData('id'));
+        }
+
+        $formBuilder = new CommentFormBuilder($comment);
+        $formBuilder->build();
+
+        $form = $formBuilder->form();
+
+        $formHandler = new \OCFram\FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
+
+        if($formHandler->process())
         {
-            $this->page->addVar('comment', $this->managers->getManagerOf('Comments')->get($request->getData('id')));
+            $this->user()->setFlash('Le commentaire a bienété modifié');
+            $this->app->httpResponse()->redirect('/admin/');
         }
+
+        $this->page->addVar('form', $form->createView());
     }
 
     public function executeDeleteComment(HTTPRequest $request)

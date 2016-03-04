@@ -8,13 +8,11 @@
 
 namespace App\Frontend\Modules\News;
 
+use \FormBuilder\CommentFormBuilder;
 use \OCFram\BackController;
 use \OCFram\HTTPRequest;
 use \Entity\Comment;
-use \OCFram\Form;
-use OCFram\StringField;
-use \OCFram\StringFilds;
-use \Entity\TextField;
+use \OCFram\FormHandler;
 
 class NewsController extends BackController
 {
@@ -27,7 +25,7 @@ class NewsController extends BackController
 
         $manager = $this->managers->getManagerOf('News');
 
-        $list_of_news = $manager->getNewscOrderByIdDesc(0, $number_of_news);
+        $list_of_news = $manager->getNewscOrderByIdDesc_a(0, $number_of_news);
 
         foreach ($list_of_news as $news)
         {
@@ -45,7 +43,7 @@ class NewsController extends BackController
 
     public function executeShow(HTTPRequest $request)
     {
-        $news = $this->managers->getManagerOf('News')->getUnique($request->getData('FNC_id'));
+        $news = $this->managers->getManagerOf('News')->getUnique($request->getData('id'));
 
         if (empty($news))
         {
@@ -61,10 +59,10 @@ class NewsController extends BackController
     {
         $this->page->addVar('title', 'Ajout d\'un commentaire');
 
-        if($request->postExists('pseudo')) {
+        if($request->method() == 'POST') {
             $comment = new Comment([
                 //'news' => $request->getData('news'),
-                'author' => $request->postData('pseudo'),
+                'author' => $request->postData('author'),
                 'content' => $request->postData('content')
             ]);
         }
@@ -72,28 +70,20 @@ class NewsController extends BackController
             $comment = new Comment;
         }
 
-        $form = new Form($comment);
+        $formBuilder = new CommentFormBuilder($comment);
+        $formBuilder->build();
 
-        $form->add(new StringField([
-            'label' => 'Auteur',
-            'name' => 'auteur',
-            'maxlength' => 50
-        ]))
-            ->add(new StringField([
-                'label' => 'Contenu',
-                'name' => 'contenu',
-                'rows' => 7,
-                'cols' => 50
-            ]));
+        $form = $formBuilder->form();
 
-        if($form->isValid())
+        $formHandler = \OCFram\FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
+
+        if($formHandler->process())
         {
-
+            $this->app->user()->setFlash('Le commentaire a bien été ajouté, merci !');
+            $this->app->httpResponse()->redirect('news-'.$request->getData('news').'.html');
         }
-
         $this->page->addVar('comment', $comment);
         $this->page->addvar('form', $form->createview());
         $this->page->addVar('title', 'Ajout d\'un commentaire');
-
     }
 }

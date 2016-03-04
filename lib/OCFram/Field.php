@@ -16,11 +16,12 @@ abstract class Field
     protected $errorMessage,
                 $label,
                 $name,
-                $value;
+                $value,
+                $validators = [];
 
 
     /**
-     * Methode permettantr de construire un widget assoicie.
+     * Methode permettant de construire un widget assoicie.
      * @return void
      */
     abstract public function buildWidget();
@@ -35,7 +36,15 @@ abstract class Field
 
     public function isValid()
     {
-
+        foreach($this->validators as $validator)
+        {
+            if(!$validator->isValid($this->value))
+            {
+                $this->errorMessage = $validator->errorMessage();
+                return false;
+            }
+        }
+        return true;
     }
 
     public function label()
@@ -53,11 +62,41 @@ abstract class Field
         return $this->value;
     }
 
+    public function length()
+    {
+        return $this->length;
+    }
+
+    public function validators()
+    {
+        return $this->validators;
+    }
+
+    public function setValidators(array $validators)
+    {
+        foreach($validators as $validator)
+        {
+            if($validator instanceof Validator && !in_array($validator, $this->validators))
+            {
+                $this->validators[] = $validator;
+            }
+        }
+    }
+
     public function setLabel($label)
     {
         if(is_string($label))
         {
             $this->label = $label;
+        }
+    }
+
+    public function setLength($length)
+    {
+        $length = (int) $length;
+        if($length > 0)
+        {
+            $this->length = $length;
         }
     }
 
