@@ -27,7 +27,7 @@ class Router
     {
         foreach ($this->routes as $route)
         {
-            // Si la route correspond à l'URL
+            // Si la route correspond ï¿½ l'URL
             if (($varsValues = $route->match($url)) !== false)
             {
                 // Si elle a des variables
@@ -36,11 +36,11 @@ class Router
                     $varsNames = $route->varsNames();
                     $listVars = [];
 
-                    // On crée un nouveau tableau clé/valeur
-                    // (clé = nom de la variable, valeur = sa valeur)
+                    // On crï¿½e un nouveau tableau clï¿½/valeur
+                    // (clï¿½ = nom de la variable, valeur = sa valeur)
                     foreach ($varsValues as $key => $match)
                     {
-                        // La première valeur contient entièrement la chaine capturée (voir la doc sur preg_match)
+                        // La premiï¿½re valeur contient entiï¿½rement la chaine capturï¿½e (voir la doc sur preg_match)
                         if ($key !== 0)
                         {
                             $listVars[$varsNames[$key - 1]] = $match;
@@ -55,6 +55,6 @@ class Router
             }
         }
 
-        throw new \RuntimeException('Aucune route ne correspond à l\'URL', self::NO_ROUTE);
+        throw new \RuntimeException('Aucune route ne correspond Ã  l\'URL', self::NO_ROUTE);
     }
 }

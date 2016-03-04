@@ -25,7 +25,7 @@ class Managers
     {
         if (!is_string($module) || empty($module))
         {
-            throw new \InvalidArgumentException('Le module spécifié est invalide');
+            throw new \InvalidArgumentException('Le module spÃ©cifiÃ© est invalide');
         }
 
         if (!isset($this->managers[$module]))

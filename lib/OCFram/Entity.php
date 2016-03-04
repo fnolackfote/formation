@@ -3,8 +3,10 @@ namespace OCFram;
 
 abstract class Entity implements \ArrayAccess
 {
+    use Hydrator;
+
     protected $erreurs = [],
-        $id;
+              $id;
 
     public function __construct(array $donnees = [])
     {
