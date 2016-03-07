@@ -32,7 +32,6 @@ class Config extends ApplicationComponnent
         {
             return $this->vars[$var];
         }
-
         return null;
     }
 }

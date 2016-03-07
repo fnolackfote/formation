@@ -59,6 +59,16 @@ class News extends Entity
         $this->content = $content;
     }
 
+    public function setAuthor($author)
+    {
+        if(!is_string($author) || empty($author))
+        {
+            $this->erreurs[] = self::CONTENU_INVALIDE;
+        }
+
+        $this->author = $author;
+    }
+
     public function setDateadd(\DateTime $dateadd)
     {
         $this->dateadd = $dateadd;
@@ -73,6 +83,11 @@ class News extends Entity
     public function content()
     {
         return $this->content;
+    }
+
+    public function author()
+    {
+        return $this->author;
     }
 
     public function dateadd()

@@ -12,11 +12,15 @@ if(!isset($_GET['app']) || !file_exists(__DIR__.'/../App/'.$_GET['app'])) $_GET[
 
 require __DIR__.'/../lib/OCFram/SplClassLoader.php';
 
+$loader = require __DIR__.'/../vendor/autoload.php';
+
 $OCFramLoader = new SplClassLoader('OCFram', __DIR__.'/../lib');
 $OCFramLoader->register();
 
+
+
 $appLoader = new SplClassLoader('App', __DIR__.'/..');
-$OCFramLoader->register();
+$appLoader->register();
 
 $modelLoader = new SplClassLoader('Model', __DIR__.'/../lib/vendors');
 $modelLoader->register();
@@ -27,7 +31,7 @@ $entityLoader->register();
 $entityLoader = new SplClassLoader('FormBuilder', __DIR__.'/../lib/vendors');
 $entityLoader->register();
 
-$appClass = 'App\\'.$_GET['app'].'\\'.$_GET['app'].'application';
+$appClass = 'App\\'.$_GET['app'].'\\'.$_GET['app'].'Application';
 
 $app = new $appClass;
 $app->run();

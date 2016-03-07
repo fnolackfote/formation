@@ -8,12 +8,8 @@
 
 foreach($list_of_news as $news)
 {
-    ?>
-    <h2><a href="news-<?= $news['FNC_id'] ?>.html"><?= $news['FNC_title'] ?></a></h2>
-    <p><?= nl2br($news['FNC_content']) ?></p>
-    <p>Par <em><?= $news['FNC_fk_FAC'] ?></em>, le <?= $news['FNC_dateadd']->format('d/m/Y à H\hi') ?></p>
-    <?php if ($news['FNC_dateadd'] != $news['dateedit']) { ?>
-    <p style="text-align: right;"><small><em>Modifiée le <?= $news['FNC_dateedit']->format('d/m/Y à H\hi') ?></em></small></p>
-    <?php
-    }
+?>
+    <h2><a href="news-<?= $news['id'] ?>.html"><?= $news['title'] ?></a></h2>
+    <p><?= nl2br($news['content']) ?></p>
+<?php
 }

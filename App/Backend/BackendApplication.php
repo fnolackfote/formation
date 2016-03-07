@@ -21,7 +21,7 @@ class BackendApplication extends Application
     public function run()
     {
         // TODO: Implement run() method.
-        if($this->user->isAuthentificated())
+        if($this->user->isAuthenticated())
         {
             $controller = $this->getController();
         }

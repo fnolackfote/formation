@@ -8,5 +8,8 @@
       "name": "FANO",
       "email": "f.nolackfote@dreamcentury.com"
     }
-  ]
+  ],
+  "require": {
+    "mobiledetect/mobiledetectlib": "^2.8"
+  }
 }

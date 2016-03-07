@@ -8,12 +8,13 @@
 
 namespace App\Backend\Modules\News;
 
-
-use FormBuilder\CommentFormBuilder;
 use \OCFram\BackController;
 use \OCFram\HTTPRequest;
 use \OCFram\Comment;
 use \Entity\News;
+use \OCFRam\FormHandler;
+use \FormBuilder\NewsFormBuilder;
+use \FormBuilder\CommentFormBuilder;
 
 class NewsController extends BackController
 {
@@ -26,7 +27,7 @@ class NewsController extends BackController
 
         $manager = $this->managers->getManagerOf('News');
 
-        $this->page->addVar('listnews', $manager->getNewscOrderByIdDesc_a());
+        $this->page->addVar('list_of_news', $manager->getNewscOrderByIdDesc_a());
         $this->page->addVar('nombreNews', $manager->count());
     }
 
@@ -80,7 +81,7 @@ class NewsController extends BackController
             }
         }
 
-        $formBuilder = new CommentFormBuilder($news);
+        $formBuilder = new NewsFormBuilder($news);
         $formBuilder->build();
 
         $form = $formBuilder->form();
@@ -90,7 +91,7 @@ class NewsController extends BackController
 
         if($formHandler->process())
         {
-            $this->user()->setFlash($news->isNew() ? 'La news a bien été ajoutée !' : 'La news a bien été modifiée !');
+            $this->app->user()->setFlash($news->isNew() ? 'La news a bien été ajoutée !' : 'La news a bien été modifiée !');
             $this->app->httpResponse()->redirect('/admin/');
         }
 
@@ -104,12 +105,12 @@ class NewsController extends BackController
         if($request->method() == 'POST') {
             $comment = new Comment([
                 'id' => $request - getData('id'),
-                'author' => $request->getData('author'),
-                'content' => $request->getData('content')
+                'author' => $request->postData('author'),
+                'content' => $request->postData('content')
             ]);
         }
         else {
-            $comment = $this->managers->getManagerOf('comments')->get($request->getData('id'));
+            $comment = $this->managers->getManagerOf('Comments')->get($request->getData('id'));
         }
 
         $formBuilder = new CommentFormBuilder($comment);
@@ -121,7 +122,7 @@ class NewsController extends BackController
 
         if($formHandler->process())
         {
-            $this->user()->setFlash('Le commentaire a bienété modifié');
+            $this->user()->setFlash('Le commentaire a bien été modifié');
             $this->app->httpResponse()->redirect('/admin/');
         }
 
@@ -131,7 +132,7 @@ class NewsController extends BackController
     public function executeDeleteComment(HTTPRequest $request)
     {
         $this->managers->getManagerOf('Comments')->delete($request->getData('id'));
-        $this->app->user()->setFlash('Lecommentaire a bien été supprimé !');
+        $this->app->user()->setFlash('Le commentaire a bien été supprimé !');
         $this->app->httpResponse()->redirect('.');
     }
 

@@ -43,6 +43,7 @@
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  * @author Fabien Potencier <fabien.potencier@symfony-project.org>
  */
+
 class SplClassLoader
 {
     private $_fileExtension = '.php';
@@ -146,6 +147,7 @@ class SplClassLoader
      */
     public function loadClass($className)
     {
+
         if (null === $this->_namespace || $this->_namespace.$this->_namespaceSeparator === substr($className, 0, strlen($this->_namespace.$this->_namespaceSeparator))) {
             $fileName = '';
             $namespace = '';

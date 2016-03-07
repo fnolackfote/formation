@@ -9,7 +9,7 @@
 namespace OCFram;
 
 
-class HHTPResponce
+class HTTPResponse extends ApplicationComponnent
 {
     protected $page;
 

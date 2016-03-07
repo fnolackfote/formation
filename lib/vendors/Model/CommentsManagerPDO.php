@@ -21,11 +21,14 @@ class CommentsManagerPDO extends CommentsManager
     protected function add(Comment $comment)
     {
         // TODO: Implement add() method.
-        $insertCommentc = $this->dao->prepare('INSERT INTO t_frm_comment(FCC_content, FCC_date, FCC_fk_FAC, FCC_fk_FNC) SET FCC_content = :content, FCC_date = NOW(), FCC_fk_FAC = :FAC_id, FCC_fk_FNC = :FNC_id');
+        $insertCommentc = $this->dao->prepare('INSERT INTO comment(content, date, author, news) SET content = :content, date = NOW(), author = :author, news = :news');
+
+       /* $comment->setContent(empty(trim($comment->content())) ? 'test insert comment 01' : trim($comment->content()));
+        $comment->setAuthor(empty(trim($comment->author())) ? 'test insert comment 01' : trim($comment->author())); */
 
         $insertCommentc->bindValue(':content', $comment->content());
-        $insertCommentc->bindValue(':FAC_id', FAC_ID, \PDO::PARAM_INT);
-        $insertCommentc->bindValue(':FNC_id', FNC_ID, \PDO::PARAM_INT);
+        $insertCommentc->bindValue(':author', $comment->author());
+        $insertCommentc->bindValue(':news', $comment->news(), \PDO::PARAM_INT);
 
         $insertCommentc->execute();
 
@@ -38,7 +41,7 @@ class CommentsManagerPDO extends CommentsManager
     protected function modify(Comment $comment)
     {
         // TODO: Implement modify() method.
-        $req = $this->dao->prepare('UPDATE t_frm_commentc SET FCC_content = :content WHERE FCC_id = :id');
+        $req = $this->dao->prepare('UPDATE comment SET content = :content WHERE id = :id');
         $req->bindValue(':content', $comment->content());
         $req->bindValue(':id', $comment->id());
 
@@ -48,7 +51,7 @@ class CommentsManagerPDO extends CommentsManager
     public function get($id)
     {
         // TODO: Implement get() method.
-        $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FAC, FCC_fk_FNC FROM t_frm_commentc WHERE FCC_id = :id');
+        $req = $this->dao->prepare('SELECT id, content, author, news FROM comment WHERE id = :id');
         $req->bindValue(':id', (int) $id, \PDO::PARAM_INT);
         $req->execute();
 
@@ -59,12 +62,36 @@ class CommentsManagerPDO extends CommentsManager
 
     public function delete($id)
     {
-        $this->dao->exec('DELETE FROM t_frm_commentc WHERE FCC_id = '.(int) $id);
+        $this->dao->exec('DELETE FROM comment WHERE id = '.(int) $id);
     }
 
     public function deleteFromNews($news_id)
     {
         // TODO: Implement deleteFromNews() method.
-        $this->dao->exec('DELETE FROM t_frm_commentc WHERE FCC_fk_FNC = '.(int) $news_id);
+        $this->dao->exec('DELETE FROM comment WHERE news = '.(int) $news_id);
+    }
+
+    public function getListOf($news)
+    {
+        if(!ctype_digit($news))
+        {
+            throw new \InvalidArgumentException('L\'identifiant de la news passé doit être un entier valide.');
+        }
+
+        $req = $this->dao->prepare('SELECT id, content, author, date, news FROM comment WHERE news = :news');
+        $req->bindValue(':news', $news, \PDO::PARAM_INT);
+
+        $req->execute();
+
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
+
+        $comments = $req->fetchAll();
+
+        foreach($comments as $comment)
+        {
+            $comment->setDate(new \DateTime($comment->date(), new \DateTimeZone('Europe/Paris')));
+        }
+
+        return $comments;
     }
 }

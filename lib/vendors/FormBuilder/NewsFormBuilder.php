@@ -21,9 +21,9 @@ class NewsFormBuilder extends FormBuilder
         $this->form->add(new StringField([
             'label' => 'Auteur',
             'name' => 'author',
-            'maxLength' => 20,
+            'maxLength' => 50,
             'validators' => [
-                new MaxLengthValidator('L\'auteur spécifié est trop long (20 caractères maximum)', 20),
+                new MaxLengthValidator('L\'auteur spécifié est trop long (50 caractères maximum)', 50),
                 new NotNullValidator('Merci de spécifier l\'auteur de la news')
             ],
         ]))

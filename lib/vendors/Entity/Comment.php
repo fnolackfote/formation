@@ -51,7 +51,6 @@ class Comment extends Entity
         $this->author = (int) $author;
     }
 
-
     public function author()
     {
         return $this->author;
@@ -71,5 +70,4 @@ class Comment extends Entity
     {
         return $this->news;
     }
-
 }

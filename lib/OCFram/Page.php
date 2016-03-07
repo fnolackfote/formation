@@ -31,6 +31,8 @@ class Page extends ApplicationComponnent
             throw new \RuntimeException('La vue spécifiée n\'existe pas');
         }
 
+        $user = $this->app->user();
+
         extract($this->vars);
 
         ob_start();

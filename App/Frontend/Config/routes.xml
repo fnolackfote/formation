@@ -2,5 +2,6 @@
 <routes>
     <route url="/" module="News" action="index" ></route>
     <route url="/news-([0-9]+)\.html" module="News" action="show" vars="FNC_id"></route>
+    <route url="/detect.php" module="MobileDetect" action="detect"></route>
     <route url="/comment-([0-9]+)\.html" module="News" action="insertComment" vars="news_id"></route>
 </routes>

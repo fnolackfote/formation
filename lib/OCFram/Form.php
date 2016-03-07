@@ -22,8 +22,8 @@ class Form
     public function add(Field $field)
     {
         $attr = $field->name();
-        $field->setvalue($this->entity->attr());
-        $this->field[] = $field;
+        $field->setValue($this->entity->$attr());
+        $this->fields[] = $field;
         return $this;
     }
 

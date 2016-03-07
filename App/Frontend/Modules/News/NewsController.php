@@ -37,13 +37,12 @@ class NewsController extends BackController
                 $news->setContent($debut);
             }
         }
-
-        $this->page->addVar('listeNews', $list_of_news);
+        $this->page->addVar('list_of_news', $list_of_news);
     }
 
     public function executeShow(HTTPRequest $request)
     {
-        $news = $this->managers->getManagerOf('News')->getUnique($request->getData('id'));
+        $news = $this->managers->getManagerOf('News')->getNewscUniqueUsingNewsId($request->getData('id'));
 
         if (empty($news))
         {
@@ -61,7 +60,7 @@ class NewsController extends BackController
 
         if($request->method() == 'POST') {
             $comment = new Comment([
-                //'news' => $request->getData('news'),
+                'news' => $request->getData('news'),
                 'author' => $request->postData('author'),
                 'content' => $request->postData('content')
             ]);
@@ -75,7 +74,7 @@ class NewsController extends BackController
 
         $form = $formBuilder->form();
 
-        $formHandler = \OCFram\FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
+        $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
 
         if($formHandler->process())
         {
@@ -83,7 +82,7 @@ class NewsController extends BackController
             $this->app->httpResponse()->redirect('news-'.$request->getData('news').'.html');
         }
         $this->page->addVar('comment', $comment);
-        $this->page->addvar('form', $form->createview());
+        $this->page->addVar('form', $form->createview());
         $this->page->addVar('title', 'Ajout d\'un commentaire');
     }
 }

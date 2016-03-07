@@ -22,10 +22,10 @@ class CommentFormBuilder extends FormBuilder
             'label' => 'Auteur',
             'name' => 'author',
             'maxLength' => 50,
-            'validators' => [
-                new MaxLengthValidator('L\'auteur spécifié est trop long (50 caractères maximum)', 50),
-                new NotNullValidator('Merci de spécifier l\'auteur du commentaire')
-            ],
+           /* 'validators' => [
+                new MaxLengthValidator('50 caractere minimum pour le nom de l\auteur', 50),
+                new NotNullValidator('Merci de spécifier le nom de l\'auteur'),
+            ],*/
             ]))
             ->add(new TextField([
             'label' => 'Contenu',
