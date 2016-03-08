@@ -21,11 +21,11 @@ class News extends Entity
      *      datetime dateedit (fnc_dateedit) ==> date de modif
      *      int author (fnc_fk_fac) ==> id de l'auteur du post
      */
-    protected $title,
-              $content,
-              $dateadd,
-              $dateedit,
-              $author;
+    protected $FNC_title,
+              $FNC_content,
+              $FNC_dateadd,
+              $FNC_dateedit,
+              $FNC_fk_FAC;
 
     const AUTEUR_INVALIDE = 1;
     const TITRE_INVALIDE = 2;
@@ -33,76 +33,76 @@ class News extends Entity
 
     public function isValid()
     {
-        return !(empty($this->author) || empty($this->title) || empty($this->content));
+        return !(empty($this->FNC_author) || empty($this->FNC_title) || empty($this->FNC_content));
     }
 
 
     //  SETTERS   //
 
-    public function setTitle($title)
+    public function setFNC_title($title)
     {
         if(!is_string($title) || empty($title))
         {
             $this->erreurs[] = self::TITRE_INVALIDE;
         }
 
-        $this->title = $title;
+        $this->FNC_title = $title;
     }
 
-    public function setContent($content)
+    public function setFNC_content($content)
     {
         if(!is_string($content) || empty($content))
         {
             $this->erreurs[] = self::CONTENU_INVALIDE;
         }
 
-        $this->content = $content;
+        $this->FNC_content = $content;
     }
 
-    public function setAuthor($author)
+    public function setFNC_author($author)
     {
         if(!is_string($author) || empty($author))
         {
             $this->erreurs[] = self::CONTENU_INVALIDE;
         }
 
-        $this->author = $author;
+        $this->FNC_fk_FAC = $author;
     }
 
-    public function setDateadd(\DateTime $dateadd)
+    public function setFNC_dateadd(\DateTime $dateadd)
     {
-        $this->dateadd = $dateadd;
+        $this->FNC_dateadd = $dateadd;
     }
 
-    public function setDateedit(\DateTime $dateedit)
+    public function setFNC_dateedit(\DateTime $dateedit)
     {
-        $this->dateedit = $dateedit;
+        $this->FNC_dateedit = $dateedit;
     }
 
     //   GETTERS   //
-    public function content()
+    public function FNC_content()
     {
-        return $this->content;
+        return $this->FNC_content;
     }
 
-    public function author()
+    public function FNC_author()
     {
-        return $this->author;
+        return $this->FNC_fk_FAC;
     }
 
-    public function dateadd()
+    public function FNC_dateadd()
     {
-        return $this->dateadd;
+        return $this->FNC_dateadd;
     }
 
-    public function title()
+    public function FNC_title()
     {
-        return $this->title;
+        return $this->FNC_title;
     }
 
-    public function dateedit()
+    public function FNC_dateedit()
     {
-        return $this->dateedit;
+        return $this->FNC_dateedit;
     }
 
 }

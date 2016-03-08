@@ -14,7 +14,7 @@
     <?php
     foreach ($list_of_news as $news)
     {
-        echo '<tr><td>', $news['author'], '</td><td>', $news['title'], '</td><td>le ', $news['dateadd']->format('d/m/Y à H\hi'), '</td><td>', ($news['dateadd'] == $news['dateedit'] ? '-' : 'le '.$news['dateedit']->format('d/m/Y à H\hi')), '</td><td><a href="news-update-', $news['id'], '.html"><img src="/images/update.png" alt="Modifier" /></a> <a href="news-delete-', $news['id'], '.html"><img src="/images/delete.png" alt="Supprimer" /></a></td></tr>', "\n";
+        echo '<tr><td>', $news['FNC_fk_FAC'], '</td><td>', $news['FNC_title'], '</td><td>le ', $news['FNC_dateadd']->format('d/m/Y à H\hi'), '</td><td>', ($news['FNC_dateadd'] == $news['FNC_dateedit'] ? '-' : 'le '.$news['FNC_dateedit']->format('d/m/Y à H\hi')), '</td><td><a href="news-update-', $news['FNC_id'], '.html"><img src="/images/update.png" alt="Modifier" /></a> <a href="news-delete-', $news['FNC_id'], '.html"><img src="/images/delete.png" alt="Supprimer" /></a></td></tr>', "\n";
     }
     ?>
 </table>

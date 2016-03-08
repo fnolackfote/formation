@@ -8,7 +8,6 @@
 
 namespace OCFram;
 
-
 class Form
 {
     protected $entity,
@@ -27,7 +26,7 @@ class Form
         return $this;
     }
 
-    public function createview()
+    public function createView()
     {
         $view = '';
 

@@ -19,22 +19,22 @@ class CommentFormBuilder extends FormBuilder
     public function build()
     {
         $this->form->add(new StringField([
-            'label' => 'Auteur',
-            'name' => 'author',
-            'maxLength' => 50,
-           /* 'validators' => [
-                new MaxLengthValidator('50 caractere minimum pour le nom de l\auteur', 50),
-                new NotNullValidator('Merci de spécifier le nom de l\'auteur'),
-            ],*/
+                'label' => 'Auteur',
+                'name' => 'author',
+                'maxLength' => 50,
+                'validators' => [
+                    new MaxLengthValidator('50 caractere minimum pour le nom de l\auteur', 50),
+                    new NotNullValidator('Merci de spécifier le nom de l\'auteur'),
+                ],
             ]))
             ->add(new TextField([
-            'label' => 'Contenu',
-            'name' => 'content',
-            'rows' => 7,
-            'cols' => 50,
-            'validators' => [
-                new NotNullValidator('Merci de spécifier votre commentaire'),
-            ],
-        ]));
+                'label' => 'Contenu',
+                'name' => 'content',
+                'rows' => 7,
+                'cols' => 50,
+                'validators' => [
+                    new NotNullValidator('Merci de spécifier votre commentaire'),
+                ],
+            ]));
     }
 }

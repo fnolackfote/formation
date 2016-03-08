@@ -17,6 +17,7 @@ abstract class Field
                 $label,
                 $name,
                 $value,
+                $requir = '',
                 $validators = [];
 
 
@@ -62,10 +63,17 @@ abstract class Field
         return $this->value;
     }
 
-    public function length()
+    public function requir()
+    {
+        return $this->requir;
+    }
+
+
+
+    /*public function length()
     {
         return $this->length;
-    }
+    }*/
 
     public function validators()
     {
@@ -91,14 +99,14 @@ abstract class Field
         }
     }
 
-    public function setLength($length)
+    /*public function setLength($length)
     {
         $length = (int) $length;
         if($length > 0)
         {
             $this->length = $length;
         }
-    }
+    }*/
 
     public function setName($name)
     {
@@ -113,6 +121,14 @@ abstract class Field
         if(is_string($value))
         {
             $this->value = $value;
+        }
+    }
+
+    public function setRequir($requir)
+    {
+        if(is_string($requir))
+        {
+            $this->requir = $requir;
         }
     }
 }

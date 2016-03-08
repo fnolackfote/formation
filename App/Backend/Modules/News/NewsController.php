@@ -74,7 +74,7 @@ class NewsController extends BackController
         else{
             if($request->getExists('id'))
             {
-                $news = $this->managers->getManagerOf('News')->getUnique($request->getData('id'));
+                $news = $this->managers->getManagerOf('News')->getNewscUniqueUsingNewsId($request->getData('id'));
             }
             else{
                 $news = new News;
@@ -104,7 +104,7 @@ class NewsController extends BackController
 
         if($request->method() == 'POST') {
             $comment = new Comment([
-                'id' => $request - getData('id'),
+                'id' => $request->getData('id'),
                 'author' => $request->postData('author'),
                 'content' => $request->postData('content')
             ]);
@@ -118,7 +118,7 @@ class NewsController extends BackController
 
         $form = $formBuilder->form();
 
-        $formHandler = new \OCFram\FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
+        $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
 
         if($formHandler->process())
         {

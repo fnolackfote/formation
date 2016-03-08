@@ -34,4 +34,9 @@ class Config extends ApplicationComponnent
         }
         return null;
     }
+
+    public function getConnexion()
+    {
+
+    }
 }

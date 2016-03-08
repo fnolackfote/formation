@@ -17,8 +17,6 @@ $loader = require __DIR__.'/../vendor/autoload.php';
 $OCFramLoader = new SplClassLoader('OCFram', __DIR__.'/../lib');
 $OCFramLoader->register();
 
-
-
 $appLoader = new SplClassLoader('App', __DIR__.'/..');
 $appLoader->register();
 
@@ -28,8 +26,8 @@ $modelLoader->register();
 $entityLoader = new SplClassLoader('Entity', __DIR__.'/../lib/vendors');
 $entityLoader->register();
 
-$entityLoader = new SplClassLoader('FormBuilder', __DIR__.'/../lib/vendors');
-$entityLoader->register();
+$formBuilderLoader = new SplClassLoader('FormBuilder', __DIR__.'/../lib/vendors');
+$formBuilderLoader->register();
 
 $appClass = 'App\\'.$_GET['app'].'\\'.$_GET['app'].'Application';
 

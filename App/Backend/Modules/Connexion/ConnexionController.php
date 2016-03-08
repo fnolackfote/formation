@@ -22,8 +22,11 @@ class ConnexionController extends BackController
             $login = $request->postData('login');
             $password = $request->postData('password');
 
-            if($login == $this->app->config()->get('login') && $password == $this->app->config()->get('pass'))
+            $connected = $this->managers->getManagerOf('Author')->getConnexion($login, $password);
+
+            if(!is_null($connected))
             {
+                $this->app->user()->setFlash('Connecte en tant que <b>'.$connected['FAC_username'].'</b>');
                 $this->app->user()->setAuthenticated(true);
                 $this->app->httpResponse()->redirect('/admin/');
             }
@@ -34,11 +37,10 @@ class ConnexionController extends BackController
         }
     }
 
-    public function executeLogout(HTTPRequest $request)
+    public function executeLogout()
     {
         if($this->app->user()->isAuthenticated()) {
             $this->page->addVar('title', 'Déconnexion');
-
 
             $this->app->user()->setAuthenticated(false);
             session_unset();

@@ -29,12 +29,12 @@ class NewsController extends BackController
 
         foreach ($list_of_news as $news)
         {
-            if (strlen($news->content()) > $number_of_case_per_news)
+            if (strlen($news->FNC_content()) > $number_of_case_per_news)
             {
-                $debut = substr($news->content(), 0, $number_of_case_per_news);
+                $debut = substr($news->FNC_content(), 0, $number_of_case_per_news);
                 $debut = substr($debut, 0, strrpos($debut, ' ')) . '...';
 
-                $news->setContent($debut);
+                $news->setFNC_content($debut);
             }
         }
         $this->page->addVar('list_of_news', $list_of_news);
@@ -82,7 +82,7 @@ class NewsController extends BackController
             $this->app->httpResponse()->redirect('news-'.$request->getData('news').'.html');
         }
         $this->page->addVar('comment', $comment);
-        $this->page->addVar('form', $form->createview());
+        $this->page->addVar('form', $form->createView());
         $this->page->addVar('title', 'Ajout d\'un commentaire');
     }
 }

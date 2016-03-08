@@ -33,6 +33,9 @@
                     <?php if($user->isAuthenticated()) { ?>
                     <li><a href="/admin/">Admin</a></li>
                     <li><a href="/admin/news-insert.html">Ajouter une news</a></li>
+                    <?php }
+                    else {?>
+                    <li><a href="/newAuthor">Inscription</a></li>
                     <?php } ?>
                     <li><a href="/admin/logout/"> <?php echo ($user->isAuthenticated()) ? 'Déconnexion' : 'Connexion'; ?></a></li>
                 </ul>
