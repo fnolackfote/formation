@@ -15,8 +15,13 @@ class Author extends Entity
 {
     protected $FAC_lastname,
                 $FAC_firstname,
+                $FAC_email,
+                $FAC_id,
                 $FAC_username,
-                $FAC_password;
+                $FAC_password,
+                $FAC_rule;
+
+    const RULE_ADMIN = 1;
 
     public function isValid()
     {
@@ -43,9 +48,42 @@ class Author extends Entity
         return trim($this->FAC_username);
     }
 
+    public function FAC_id()
+    {
+        return $this->FAC_id;
+    }
+
     public function FAC_password()
     {
-        return crypt(trim($this->FAC_password));
+        //return crypt(trim($this->FAC_password));
+        return trim($this->FAC_password);
+    }
+
+    public function FAC_email()
+    {
+        //return crypt(trim($this->FAC_password));
+        return trim($this->FAC_email);
+    }
+
+    public function FAC_rule()
+    {
+        //return crypt(trim($this->FAC_password));
+        return $this->FAC_rule;
+    }
+
+    public function setFAC_rule($rule)
+    {
+        $this->FAC_rule = $rule;
+    }
+
+    public function setFAC_email($email)
+    {
+        $this->FAC_email = $email;
+    }
+
+    public function setFAC_id($id)
+    {
+        $this->FAC_id = $id;
     }
 
     public function setFAC_firstname($firstname)

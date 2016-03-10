@@ -18,7 +18,7 @@ abstract class CommentsManager extends Manager
      * @param Comment $comment Le commentaire à ajouter
      * @return void
      */
-    abstract protected function add(Comment $comment);
+    abstract protected function add(Comment $comment, $user_id = null);
 
     /**
      * Méthode de modification ce commentaires
@@ -26,6 +26,13 @@ abstract class CommentsManager extends Manager
      * @return void
      */
     abstract protected function modify(Comment $comment);
+
+    /**
+     * Ensemble des commentaires de l'auteur identifier par $author_id
+     * @param int $author_id Identifiant de l'auteur
+     * @return \Entity\Comment
+     */
+    abstract public function getCommentcByUsingAuthorId($author_id);
 
     /**
      * Méthode permettant d'obtenir un commentaire a partir de son identifiant

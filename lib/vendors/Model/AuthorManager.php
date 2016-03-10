@@ -36,6 +36,18 @@ abstract class AuthorManager extends Manager
     abstract public function get($id);
 
     /**
+     * @param int $news_id L'identifiant de la news
+     * @return \Entity\Author
+     */
+    abstract public function getAuthorcByNewsId($news_id);
+
+    /**
+     * @param int $user_id L'identifiant du user
+     * @return \Entity\Author
+     */
+    abstract public function getAuthorcUniqueByAuthorcId($user_id);
+
+    /**
      * Methode permettant de supprimer un auteur.
      * @param $id int Identifiant de l'auteur
      * @return void
@@ -50,7 +62,7 @@ abstract class AuthorManager extends Manager
     abstract public function deleteNewsOfAuthor($news_id);
 
     /**
-     * Méthode permettant d'enregistrement un auteur
+     * Méthode permettant d'enregistrement un auteur/User
      * @param Author $author auteur a enregistrer
      * @return void
      * @othername insertIntoAuthorcOrModifyAuthorcc

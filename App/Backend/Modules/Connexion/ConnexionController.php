@@ -23,10 +23,13 @@ class ConnexionController extends BackController
             $password = $request->postData('password');
 
             $connected = $this->managers->getManagerOf('Author')->getConnexion($login, $password);
+            $idUser = $this->managers->getManagerOf('Author')->getIdUser($login, $password);
 
             if(!is_null($connected))
             {
-                $this->app->user()->setFlash('Connecte en tant que <b>'.$connected['FAC_username'].'</b>');
+
+                $this->app->user()->setFlash('Connecte en tant que <b>'.$connected->FAC_username().'</b>');
+                $this->app->user()->setSessionUser($idUser->FAC_id);
                 $this->app->user()->setAuthenticated(true);
                 $this->app->httpResponse()->redirect('/admin/');
             }

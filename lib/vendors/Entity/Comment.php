@@ -13,61 +13,89 @@ use \OCFram\Entity;
 
 class Comment extends Entity
 {
-    protected $content,
-              $date,
-              $author,
-              $news;
+    protected $FCC_content,
+              $FCC_id,
+              $FCC_date,
+              $FCC_email,
+              $FCC_fk_FAC,
+              $FCC_fk_FNC;
 
     const AUTEUR_INVALIDE = 1;
     const CONTENU_INVALIDE = 2;
 
+    // TODO
+    /**
+     *
+     * verifie si le contenu du comment est valide  ===> Non vide
+     * @return bool
+     */
     public function isValid()
     {
-        return !(empty($this->author) || empty($this->content));
+        return !empty($this->FCC_content);
     }
 
-    public function setContent($content)
+    public function setFCC_content($content)
     {
         if(!is_string($content) || empty($content))
         {
-            $this->errors[] = self::AUTEUR_INVALIDE;
+            $this->errors[] = self::CONTENU_INVALIDE;
         }
 
-        $this->content = $content;
+        $this->FCC_content = $content;
     }
 
-    public function setDate(\DateTime $date)
+    public function setFCC_date(\DateTime $date)
     {
-        $this->date = $date;
+        $this->FCC_date = $date;
     }
 
-    public function setNews($news)
+    public function setFCC_fk_FNC($news_id)
     {
-        $this->news = (int) $news;
+        $this->FCC_fk_FNC = (int) $news_id;
     }
 
-    public function setAuthor($author)
+    public function setFCC_fk_FAC($author_id)
     {
-        $this->author = (int) $author;
+        $this->FCC_fk_FAC = (int) $author_id;
     }
 
-    public function author()
+    public function setFCC_email($email)
     {
-        return $this->author;
+        $this->FCC_email = $email;
     }
 
-    public function date()
+    public function setFCC_id($id)
     {
-        return $this->date;
+        $this->FCC_id = (int) $id;
     }
 
-    public function content()
+    public function FCC_id()
     {
-        return $this->content;
+        return $this->FCC_id;
     }
 
-    public function news()
+    public function FCC_email()
     {
-        return $this->news;
+        return $this->FCC_email;
+    }
+
+    public function FCC_fk_FAC()
+    {
+        return $this->FCC_fk_FAC;
+    }
+
+    public function FCC_date()
+    {
+        return $this->FCC_date;
+    }
+
+    public function FCC_content()
+    {
+        return $this->FCC_content;
+    }
+
+    public function FCC_fk_FNC()
+    {
+        return $this->FCC_fk_FNC;
     }
 }

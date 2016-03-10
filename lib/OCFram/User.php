@@ -35,6 +35,21 @@ class User
         return isset($_SESSION['auth']) && $_SESSION['auth'] === true;
     }
 
+    public function setSessionUser($value)
+    {
+        $_SESSION['user_id'] = (int) $value;
+    }
+
+    public function sessionUser()
+    {
+        return $_SESSION['user_id'];
+    }
+
+    public function isAdmin($admin_rule = 1)
+    {
+        return $this->isAuthenticated() && (\Entity\Author::RULE_ADMIN == $admin_rule);
+    }
+
     public function setAttribute($attr, $value)
     {
         $_SESSION[$attr] = $value;

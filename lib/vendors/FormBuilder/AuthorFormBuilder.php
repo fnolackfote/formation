@@ -24,10 +24,10 @@ class AuthorFormBuilder extends FormBuilder
             'type' => 'text',
             'require' => 'require',
             'maxLength' => 50,
-            /*'validators' => [
+            'validators' => [
                 new MaxLengthValidator('le prénom entré est trop long (50 caractères maximum)', 50),
                 new NotNullValidator('Merci de spécifier votre prénom')
-            ],*/
+            ],
         ]))
         ->add(new StringField([
             'label' => 'Nom',
@@ -35,10 +35,21 @@ class AuthorFormBuilder extends FormBuilder
             'type' => 'text',
             'require' => 'require',
             'maxLength' => 50,
-            /*'validators' => [
+            'validators' => [
                 new MaxLengthValidator('le nom entré est trop long (50 caractères maximum)', 50),
                 new NotNullValidator('Merci de spécifier votre nom')
-            ],*/
+            ],
+        ]))
+        ->add(new StringField([
+            'label' => 'Email',
+            'name' => 'FAC_email',
+            'type' => 'email',
+            'require' => 'require',
+            'maxLength' => 100,
+            'validators' => [
+                new MaxLengthValidator('le nom entré est trop long (50 caractères maximum)', 50),
+                new NotNullValidator('Merci de spécifier votre nom')
+            ],
         ]))
         ->add(new StringField([
             'label' => 'Nom Utilisateur',
@@ -46,10 +57,10 @@ class AuthorFormBuilder extends FormBuilder
             'type' => 'text',
             'require' => 'require',
             'maxLength' => 50,
-            /*'validators' => [
+            'validators' => [
                 new MaxLengthValidator('le nom d\'utilisateur entré est trop long (50 caractères maximum)', 50),
                 new NotNullValidator('Merci de spécifier votre nom d\'utilisateur')
-            ],*/
+            ],
         ]))
         ->add(new StringField([
             'label' => 'Mot de passe',
@@ -57,10 +68,10 @@ class AuthorFormBuilder extends FormBuilder
             'type' => 'password',
             'require' => 'require',
             'maxLength' => 20,
-            /*'validators' => [
+            'validators' => [
                 new MaxLengthValidator('le mot de passe est trop long (20 caractères maximum)', 20),
                 new NotNullValidator('Merci de spécifier votre mot de passe')
-            ],*/
+            ],
         ]));
     }
 

@@ -8,6 +8,7 @@
 
 namespace Model;
 
+use Entity\Author;
 use \Entity\News;
 
 class NewsManagerPDO extends NewsManager
@@ -46,9 +47,13 @@ class NewsManagerPDO extends NewsManager
         return $list_of_news;
     }
 
+    /**
+     * @param $newsc_id
+     * @return null
+     */
     public function getNewscUniqueUsingNewsId($newsc_id)
     {
-        $selectNewscUsingNewsid = $this->dao->prepare('SELECT FNC_id, FNC_title, FNC_content, FNC_dateadd, FNC_dateedit, FNC_fk_FAC FROM t_frm_newsc ORDER BY FNC_id = :news_id');
+        $selectNewscUsingNewsid = $this->dao->prepare('SELECT FNC_id, FNC_title, FNC_content, FNC_dateadd, FNC_dateedit, FNC_fk_FAC FROM t_frm_newsc WHERE FNC_id = :news_id ORDER BY FNC_id');
         $selectNewscUsingNewsid->bindValue('news_id', (int) $newsc_id, \PDO::PARAM_INT);
         $selectNewscUsingNewsid->execute();
 
@@ -65,34 +70,75 @@ class NewsManagerPDO extends NewsManager
         return null;
     }
 
+    /**
+     * @return mixed
+     */
     public function count()
     {
-        // TODO: Implement count() method.
         return $this->dao->query('SELECT COUNT(*) FROM t_frm_newsc')->fetchColumn();
     }
 
+    /**
+     * @param News $news
+     */
     protected function add(News $news)
     {
-        $req = $this->dao->prepare('INSERT INTO t_frm_newsc SET FNC_author = :author, FNC_title = :title, FNC_content = :content, FNC_dateadd = NOW(), FNC_dateedit = NOW()');
+        $req = $this->dao->prepare('INSERT INTO t_frm_newsc SET FNC_fk_FAC = :author, FNC_title = :title, FNC_content = :content, FNC_dateadd = NOW(), FNC_dateedit = NOW()');
 
-        $req->bindValue(':author', $news->FNC_author());
+        $req->bindValue(':author', $_SESSION['user_id']);
         $req->bindValue(':title', $news->FNC_title());
         $req->bindValue(':content', $news->FNC_content());
 
         $req->execute();
     }
 
+    /**
+     * L'ensemble des news d'un Auteur identifier par author_id
+     * @param int $author_id Identifiant de l'auteur
+     * @return \Entity\News
+     */
+    public function getNewscByUsingAuthorId($author_id)
+    {
+        if(!ctype_digit($author_id))
+        {
+            throw new \InvalidArgumentException('L\'identifiant de l\'auteur passé doit être un entier valide.');
+        }
+
+        $selectNewscUsingNewsid = $this->dao->prepare('SELECT FNC_id, FNC_title, FNC_content, FNC_dateadd, FNC_dateedit, FNC_fk_FAC FROM t_frm_newsc ORDER BY FNC_fk_FAC = :author_id');
+
+        $selectNewscUsingNewsid->bindValue('author_id', (int) $author_id, \PDO::PARAM_INT);
+        $selectNewscUsingNewsid->execute();
+
+        $selectNewscUsingNewsid->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\News');
+
+        $newsByAuthorId_a = $selectNewscUsingNewsid->fetchAll();
+
+        foreach($newsByAuthorId_a as $news)
+        {
+            $news->setFNC_dateadd(new \DateTime($news->FNC_dateadd(), new \DateTimeZone('Europe/Paris')));
+            $news->setFNC_dateedit(new \DateTime($news->FNC_dateedit(), new \DateTimeZone('Europe/Paris')));
+        }
+
+        return $newsByAuthorId_a;
+    }
+
+    /**
+     * @param News $news
+     */
     protected function modify(News $news)
     {
         $req = $this->dao->prepare('UPDATE t_frm_newsc SET FNC_title = :title, FNC_content = :content, FNC_dateedit = NOW() WHERE FNC_id = :id');
 
         $req->bindValue(':title', $news->FNC_title());
         $req->bindValue(':content', $news->FNC_content());
-        $req->bindValue(':id', $news->id(), \PDO::PARAM_INT);
+        $req->bindValue(':id', $news->FNC_id(), \PDO::PARAM_INT);
 
         $req->execute();
     }
 
+    /**
+     * @param int $id
+     */
     public function delete($id)
     {
         $this->dao->exec('DELETE FROM t_frm_newsc WHERE FNC_id = '.(int) $id);

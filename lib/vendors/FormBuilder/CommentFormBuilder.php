@@ -16,20 +16,23 @@ use \OCFram\NotNullValidator;
 
 class CommentFormBuilder extends FormBuilder
 {
+    // TODO: $_SESSION['user_id'] Doit etre enleve ici.
     public function build()
     {
-        $this->form->add(new StringField([
-                'label' => 'Auteur',
-                'name' => 'author',
-                'maxLength' => 50,
+        if(empty($_SESSION['user_id'])){
+            $this->form->add(new StringField([
+                'label' => 'Email',
+                'name' => 'FCC_email',
+                'maxLength' => 100,
                 'validators' => [
-                    new MaxLengthValidator('50 caractere minimum pour le nom de l\auteur', 50),
-                    new NotNullValidator('Merci de spécifier le nom de l\'auteur'),
-                ],
-            ]))
-            ->add(new TextField([
+                    new MaxLengthValidator('Le titre spécifié est trop long (100 caractères maximum)', 100),
+                    new NotNullValidator('Merci de spécifier le titre de la news')
+                    ],
+                ]));
+        }
+        $this->form->add(new TextField([
                 'label' => 'Contenu',
-                'name' => 'content',
+                'name' => 'FCC_content',
                 'rows' => 7,
                 'cols' => 50,
                 'validators' => [

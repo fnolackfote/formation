@@ -9,7 +9,6 @@ namespace Entity;
 
 use \OCFram\Entity;
 
-
 class News extends Entity
 {
 
@@ -25,6 +24,7 @@ class News extends Entity
               $FNC_content,
               $FNC_dateadd,
               $FNC_dateedit,
+              $FNC_id,
               $FNC_fk_FAC;
 
     const AUTEUR_INVALIDE = 1;
@@ -33,9 +33,8 @@ class News extends Entity
 
     public function isValid()
     {
-        return !(empty($this->FNC_author) || empty($this->FNC_title) || empty($this->FNC_content));
+        return !(empty($this->FNC_title) || empty($this->FNC_content));
     }
-
 
     //  SETTERS   //
 
@@ -59,14 +58,14 @@ class News extends Entity
         $this->FNC_content = $content;
     }
 
-    public function setFNC_author($author)
+    public function setFNC_fk_FAC($author_id)
     {
-        if(!is_string($author) || empty($author))
-        {
-            $this->erreurs[] = self::CONTENU_INVALIDE;
-        }
+        $this->FNC_fk_FAC = (int) $author_id;
+    }
 
-        $this->FNC_fk_FAC = $author;
+    public function setFNC_id($fnc_id)
+    {
+        $this->FNC_fk_FAC = (int) $fnc_id;
     }
 
     public function setFNC_dateadd(\DateTime $dateadd)
@@ -85,7 +84,7 @@ class News extends Entity
         return $this->FNC_content;
     }
 
-    public function FNC_author()
+    public function FNC_fk_FAC()
     {
         return $this->FNC_fk_FAC;
     }
@@ -100,9 +99,13 @@ class News extends Entity
         return $this->FNC_title;
     }
 
+    public function FNC_id()
+    {
+        return $this->FNC_id;
+    }
+
     public function FNC_dateedit()
     {
         return $this->FNC_dateedit;
     }
-
 }

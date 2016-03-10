@@ -9,7 +9,7 @@
 foreach($list_of_news as $news)
 {
 ?>
-    <h2><a href="news-<?= $news['id'] ?>.html"><?= $news['title'] ?></a></h2>
-    <p><?= nl2br($news['content']) ?></p>
+    <h2><a href="news-<?= $news['FNC_id'] ?>.html"><?= $news['FNC_title'] ?></a></h2>
+    <p><?= nl2br($news['FNC_content']) ?></p>
 <?php
 }

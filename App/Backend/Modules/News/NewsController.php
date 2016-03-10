@@ -26,23 +26,37 @@ class NewsController extends BackController
         $this->page->addVar('title', 'Gestion des news');
 
         $manager = $this->managers->getManagerOf('News');
+        $news_a = $manager->getNewscOrderByIdDesc_a();
+        foreach($news_a as $news) {
+            $userPostnews[$news->FNC_id()] = $this->managers->getManagerOf('Author')->getAuthorcUniqueByAuthorcId($news->FNC_fk_FAC());
+        }
 
-        $this->page->addVar('list_of_news', $manager->getNewscOrderByIdDesc_a());
+        $this->page->addVar('list_of_news', $news_a);
+        $this->page->addVar('author', $userPostnews);
         $this->page->addVar('nombreNews', $manager->count());
     }
 
+    /**
+     * @param HTTPRequest $request
+     */
     public function executeInsert(HTTPRequest $request)
     {
         $this->processForm($request);
         $this->page->addVar('title', 'Ajout d\'une news');
     }
 
+    /**
+     * @param HTTPRequest $request
+     */
     public function executeUpdate(HTTPRequest $request)
     {
         $this->processForm($request);
         $this->page->addVar('title', 'Modification d\'une news');
     }
 
+    /**
+     * @param HTTPRequest $request
+     */
     public function executeDelete(HTTPRequest $request)
     {
         $newsId = $request->getData('id');
@@ -55,26 +69,30 @@ class NewsController extends BackController
         $this->app->httpResponse()->redirect('.');
     }
 
+    /**
+     * Methode pour cree le formulaire d'ajout
+     * @param HTTPRequest $request
+     */
     public function processForm(HTTPRequest $request)
     {
 
         if($request->method() == 'POST')
         {
             $news = new News([
-                'author' => $request->postData('author'),
-                'title' => $request->postData('title'),
-                'content' => $request->postData('content')
+                //'author' => $request->postData('author'),
+                'FNC_title' => $request->postData('FNC_title'),
+                'FNC_content' => $request->postData('FNC_content')
             ]);
 
-            if($request->getExists('id'))
+            if($request->getExists('FNC_id'))
             {
-                $news->setId($request->postData('id'));
+                $news->setId($request->postData('FNC_id'));
             }
         }
         else{
-            if($request->getExists('id'))
+            if($request->getExists('FNC_id'))
             {
-                $news = $this->managers->getManagerOf('News')->getNewscUniqueUsingNewsId($request->getData('id'));
+                $news = $this->managers->getManagerOf('News')->getNewscUniqueUsingNewsId($request->getData('FNC_id'));
             }
             else{
                 $news = new News;
@@ -88,7 +106,6 @@ class NewsController extends BackController
 
         $formHandler = new \OCFram\FormHandler($form, $this->managers->getManagerOf('News'), $request);
 
-
         if($formHandler->process())
         {
             $this->app->user()->setFlash($news->isNew() ? 'La news a bien été ajoutée !' : 'La news a bien été modifiée !');
@@ -98,19 +115,23 @@ class NewsController extends BackController
         $this->page->addVar('form', $form->createView());
     }
 
+    /**
+     * Methode pour Update un commentaire
+     * @param HTTPRequest $request
+     */
     public function executeUpdateComment(HTTPRequest $request)
     {
         $this->page->addVar('title', 'modification d\'un commentaire');
+        $fcc_id = $request->getData('id');
 
         if($request->method() == 'POST') {
             $comment = new Comment([
-                'id' => $request->getData('id'),
-                'author' => $request->postData('author'),
-                'content' => $request->postData('content')
+                'FCC_id' => $fcc_id,
+                'FCC_content' => $request->postData('FCC_content')
             ]);
         }
         else {
-            $comment = $this->managers->getManagerOf('Comments')->get($request->getData('id'));
+            $comment = $this->managers->getManagerOf('Comments')->get($fcc_id);
         }
 
         $formBuilder = new CommentFormBuilder($comment);
@@ -122,7 +143,7 @@ class NewsController extends BackController
 
         if($formHandler->process())
         {
-            $this->user()->setFlash('Le commentaire a bien été modifié');
+            $this->app->user()->setFlash('Le commentaire a bien été modifié');
             $this->app->httpResponse()->redirect('/admin/');
         }
 
@@ -135,5 +156,4 @@ class NewsController extends BackController
         $this->app->user()->setFlash('Le commentaire a bien été supprimé !');
         $this->app->httpResponse()->redirect('.');
     }
-
 }

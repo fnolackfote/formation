@@ -9,6 +9,7 @@
 namespace Model;
 
 
+use Entity\Author;
 use \OCFram\Manager;
 use \Entity\News;
 
@@ -34,6 +35,13 @@ abstract class NewsManager extends Manager
      * @return void
      */
     abstract protected function add(News $news);
+
+    /**
+     * L'ensemble des news d'un auteur identifie par author_id
+     * @param int $author_id Identifiant de l'auteur
+     * @return \Entity\News
+     */
+    abstract public function getNewscByUsingAuthorId($author_id);
 
     /**
      * Méthode êrmettant la modification d'une news

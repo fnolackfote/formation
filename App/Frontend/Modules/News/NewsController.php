@@ -16,6 +16,9 @@ use \OCFram\FormHandler;
 
 class NewsController extends BackController
 {
+    /**
+     * @param HTTPRequest $request
+     */
     public function executeIndex(HTTPRequest $request)
     {
         $number_of_news = $this->app->config()->get('nombre_news');
@@ -37,37 +40,60 @@ class NewsController extends BackController
                 $news->setFNC_content($debut);
             }
         }
+
         $this->page->addVar('list_of_news', $list_of_news);
     }
 
+    /**
+     * @param HTTPRequest $request
+     */
     public function executeShow(HTTPRequest $request)
     {
-        $news = $this->managers->getManagerOf('News')->getNewscUniqueUsingNewsId($request->getData('id'));
+        $fnc_id = $request->getData('FNC_id');
+        $_SESSION['news_id'] = $fnc_id;
+        $news = $this->managers->getManagerOf('News')->getNewscUniqueUsingNewsId($fnc_id);
+        $userPostNews = $this->managers->getManagerOf('Author')->getAuthorcByNewsId($fnc_id);
+        $commentNews = $this->managers->getManagerOf('Comments')->getListOf($fnc_id);
+
+        foreach($commentNews as $comment) {
+            $userPostComment[$comment->FCC_id()] = $this->managers->getManagerOf('Author')->getAuthorcUniqueByAuthorcId($comment->FCC_fk_FAC());
+        }
 
         if (empty($news))
         {
             $this->app->httpResponse()->redirect404();
         }
 
-        $this->page->addVar('title', $news->title());
+        $this->page->addVar('title', $news->FNC_title());
         $this->page->addVar('news', $news);
-        $this->page->addVar('comments', $this->managers->getManagerOf('Comments')->getListOf($news->id()));
+        $this->page->addVar('author', $userPostNews);
+        $this->page->addVar('comments', $commentNews);
+        if(!empty($userPostComment)){
+            $this->page->addVar('authorComment', $userPostComment);
+        }
     }
 
+    /**
+     * @param HTTPRequest $request
+     */
     public function executeInsertComment(HTTPRequest $request)
     {
         $this->page->addVar('title', 'Ajout d\'un commentaire');
 
+        $fcc_fk_fnc = $_SESSION['news_id'];
+
         if($request->method() == 'POST') {
             $comment = new Comment([
-                'news' => $request->getData('news'),
-                'author' => $request->postData('author'),
-                'content' => $request->postData('content')
+                'FCC_fk_FNC' => $fcc_fk_fnc,
+                'FCC_email' => $request->postData('FCC_email'),
+                'FCC_content' => $request->postData('FCC_content')
             ]);
         }
         else {
             $comment = new Comment;
         }
+
+        //$comment->setFCC_fk_FNC($_SESSION['news_id']);
 
         $formBuilder = new CommentFormBuilder($comment);
         $formBuilder->build();
@@ -79,10 +105,10 @@ class NewsController extends BackController
         if($formHandler->process())
         {
             $this->app->user()->setFlash('Le commentaire a bien été ajouté, merci !');
-            $this->app->httpResponse()->redirect('news-'.$request->getData('news').'.html');
+            $this->app->httpResponse()->redirect('news-'.$fcc_fk_fnc.'.html');
         }
         $this->page->addVar('comment', $comment);
-        $this->page->addVar('form', $form->createView());
+        $this->page->addVar('formInsertComment', $form->createView());
         $this->page->addVar('title', 'Ajout d\'un commentaire');
     }
 }

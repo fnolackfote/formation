@@ -37,12 +37,12 @@ class StringField extends Field
 
         if(!empty($this->maxLength))
         {
-            $widget .= 'maxlength ="'.$this->maxLength.'"';
+            $widget .= ' maxlength ="'.$this->maxLength.'"';
         }
 
         if(!empty($this->requir))
         {
-            $widget .= ' require';
+            $widget .= ' require = require ';
         }
 
         return $widget .= ' />';

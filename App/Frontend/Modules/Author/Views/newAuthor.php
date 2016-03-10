@@ -10,7 +10,7 @@
 <h2>Inscription d'un nouvel auteur</h2>
 <form action="" method="post">
     <p>
-        <?= $form ?>
+        <?= $formNewAuthor ?>
 
         <input type="submit" value="Valider" />
     </p>

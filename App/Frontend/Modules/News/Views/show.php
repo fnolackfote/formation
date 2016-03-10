@@ -7,12 +7,12 @@
  */
 ?>
 
-<p>Par <em><?= $news['author'] ?></em>, le <?= $news['dateadd']->format('d/m/Y à H\hi') ?></p>
-<h2><?= $news['title'] ?></h2>
-<p><?= nl2br($news['content']) ?></p>
+<p>Par <a href="/author-<?= $author['FAC_id'] ?>.html"><b><em><?= $author['FAC_username'] ?></em></b></a>, le <?= $news['FNC_dateadd']->format('d/m/Y à H\hi') ?></p>
+<h2><?= $news['FNC_title'] ?></h2>
+<p><?= nl2br($news['FNC_content']) ?></p>
 
-<?php if ($news['dateadd'] != $news['dateedit']) { ?>
-    <p style="text-align: right;"><small><em>Modifiée le <?= $news['dateedit']->format('d/m/Y à H\hi') ?></em></small></p>
+<?php if ($news['FNC_dateadd'] != $news['FNC_dateedit']) { ?>
+    <p style="text-align: right;"><small><em>Modifiée le <?= $news['FNC_dateedit']->format('d/m/Y à H\hi') ?></em></small></p>
 <?php } ?>
 <?php
 if (empty($comments))
@@ -21,22 +21,21 @@ if (empty($comments))
     <p>Aucun commentaire n'a encore été posté. Soyez le premier à en laisser un !</p>
     <?php
 }
-
-foreach ($comments as $comment)
+foreach($comments as $comment)
 {
     ?>
     <fieldset>
         <legend>
-            Posté par <strong><?= htmlspecialchars($comment['author']) ?></strong> le <?= $comment['date']->format('d/m/Y à H\hi') ?>
-            <?php if($user->isAuthenticated()) { ?> -
-                <a href="admin/comment-update-<?= $comment['id'] ?>.html">Modifier</a> |
-                <a href="admin/comment-delete-<?= $comment['id'] ?>.html">Supprimer</a>
+            Posté par <strong><?= $user->isAuthenticated() ? $author['FAC_username'] : (empty($authorComment[$comment->FCC_id()]) ? $comment->FCC_email() : $authorComment[$comment->FCC_id()]->FAC_username()) ?></strong> le <?= date_format($comment->FCC_date(), 'd/m/Y à H\hi') ?>
+            <?php if($user->isAuthenticated() && $user->sessionUser() == $author->FAC_id()) { ?> -
+                <a href="admin/comment-update-<?= $comment->FCC_id() ?>.html">Modifier</a> |
+                <a href="admin/comment-delete-<?= $comment->FCC_id() ?>.html">Supprimer</a>
             <?php } ?>
         </legend>
-        <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
+        <p><?= nl2br(htmlspecialchars($comment->FCC_content())) ?></p>
     </fieldset>
     <?php
 }
 ?>
 
-<p><a href="comment-<?= $news['id'] ?>.html">Ajouter un commentaire</a></p>
+<p><a href="comment-<?= $news['FNC_id'] ?>.html">Ajouter un commentaire</a></p>

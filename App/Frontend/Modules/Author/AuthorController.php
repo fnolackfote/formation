@@ -23,10 +23,11 @@ class AuthorController extends BackController
 
         if($request->method() == 'POST') {
             $author = new Author([
-                'lastname' => $request->postData('lastname'),
-                'firstname' => $request->postData('firstname'),
-                'username' => $request->postData('username'),
-                'password' => $request->postData('password')
+                'FAC_lastname' => $request->postData('FAC_lastname'),
+                'FAC_firstname' => $request->postData('FAC_firstname'),
+                'FAC_email' => $request->postData('FAC_email'),
+                'FAC_username' => $request->postData('FAC_username'),
+                'FAC_password' => $request->postData('FAC_password')
             ]);
         }
         else {
@@ -45,8 +46,25 @@ class AuthorController extends BackController
             $this->app->user()->setFlash('Nouvel Utilisateur/Auteur Crée !');
             $this->app->httpResponse()->redirect('.');
         }
-        $this->page->addVar('comment', $author);
-        $this->page->addVar('form', $form->createView());
+        $this->page->addVar('author', $author);
+        $this->page->addVar('formNewAuthor', $form->createView());
         $this->page->addVar('title', 'Nouvel Auteur');
+    }
+
+    /**
+     * Afficher les details d'un user
+     * @param HTTPRequest $request
+     *
+     */
+    public function executeDetail(HTTPRequest $request)
+    {
+        $author_id = $request->getData('author_id');
+        $userPost = $this->managers->getManagerOf('Author')->getAuthorcUniqueByAuthorcId($author_id);
+        //$news_author_a = $this->managers->getManagerOf('Author')->getNewscByUsingAuthorId($author_id);
+
+        $this->page->addVar('author', $userPost);
+        $this->page->addVar('news_author_a', $this->managers->getManagerOf('News')->getNewscByUsingAuthorId($author_id));
+        $this->page->addVar('comment_author_a', $this->managers->getManagerOf('Comments')->getCommentcByUsingAuthorId($author_id));
+        $this->page->addVar('title', 'Detail de l\'auteur');
     }
 }
