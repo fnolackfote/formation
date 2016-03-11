@@ -6,6 +6,11 @@
  * Time: 18:33
  */
 ?>
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
 <h2>Detail de l'utilisateur <b> <?= $author['FAC_username'] ?></b></h2>
 <hr />
 <u><h3>Informations Personnelles</h3></u>
@@ -33,3 +38,5 @@ foreach($comment_author_a as $comment)
     <?php
 }
 ?>
+</body>
+</html>

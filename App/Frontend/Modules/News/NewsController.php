@@ -85,15 +85,14 @@ class NewsController extends BackController
         if($request->method() == 'POST') {
             $comment = new Comment([
                 'FCC_fk_FNC' => $fcc_fk_fnc,
-                'FCC_email' => $request->postData('FCC_email'),
+                'FCC_email' => empty($request->postData('FCC_email')) ? '' : $request->postData('FCC_email'),
+                'FCC_username' => $request->postData('FCC_username'),
                 'FCC_content' => $request->postData('FCC_content')
             ]);
         }
         else {
             $comment = new Comment;
         }
-
-        //$comment->setFCC_fk_FNC($_SESSION['news_id']);
 
         $formBuilder = new CommentFormBuilder($comment);
         $formBuilder->build();

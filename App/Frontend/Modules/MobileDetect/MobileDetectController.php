@@ -9,7 +9,7 @@
 
 namespace App\Frontend\Modules\MobileDetect;
 
-use OCFram\BackController;
+use \OCFram\BackController;
 
 class MobileDetectController extends BackController
 {

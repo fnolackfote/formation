@@ -409,3 +409,25 @@ footer a {
 
 .middle { vertical-align: middle; }
 
+#content-user-master {
+	position: relative;
+	text-align: center;
+	font-family: "Modern No. 20";
+	width: 20%;
+	float: right;
+}
+#content-user {
+	color: midnightblue;
+	font-size: large;
+}
+#content-rule {
+	margin-top: -20px;
+	color: midnightblue;
+	font-size: small;
+}
+fieldset {
+	word-break: break-all;
+	word-wrap: normal;
+	-ms-word-wrap: normal;
+}
+

@@ -6,7 +6,11 @@
  * Time: 15:32
  */
 ?>
-
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
 <h2>Inscription d'un nouvel auteur</h2>
 <form action="" method="post">
     <p>
@@ -15,3 +19,5 @@
         <input type="submit" value="Valider" />
     </p>
 </form>
+</body>
+</html>

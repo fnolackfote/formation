@@ -16,14 +16,15 @@ class CommentsManagerPDO extends CommentsManager
      * @othername insertIntoCommentcOrModifyCommentc
      * @param int $user_id l'id du user connecter si personne n'est connecté, $user_id = null
      */
-    protected function add(Comment $comment, $user_id = null)
+    protected function add(Comment $comment)
     {
-        $insertCommentc = $this->dao->prepare('INSERT INTO t_frm_commentc SET FCC_content = :content, FCC_date = NOW(), FCC_fk_FAC = :author, FCC_fk_FNC = :news, FCC_email = :email');
+        $insertCommentc = $this->dao->prepare('INSERT INTO t_frm_commentc SET FCC_content = :content, FCC_date = NOW(), FCC_fk_FAC = :author, FCC_username = :username, FCC_fk_FNC = :news, FCC_email = :email');
 
         $insertCommentc->bindValue(':content', $comment->FCC_content());
-        $insertCommentc->bindValue(':author', !empty($user_id) ? (int) $user_id : 0, \PDO::PARAM_INT);
+        $insertCommentc->bindValue(':author', !empty($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0, \PDO::PARAM_INT);
         $insertCommentc->bindValue(':news', $comment->FCC_fk_FNC(), \PDO::PARAM_INT);
-        $insertCommentc->bindValue(':email', empty($user_id) ? $comment->FCC_email() : '');
+        $insertCommentc->bindValue(':email', empty($_SESSION['user_id']) ? (empty($comment->FCC_email()) ? '' : $comment->FCC_email()) : '');
+        $insertCommentc->bindValue(':username', empty($_SESSION['user_id']) ? $comment->FCC_username() : '');
 
         $insertCommentc->execute();
 
@@ -42,7 +43,7 @@ class CommentsManagerPDO extends CommentsManager
             throw new \InvalidArgumentException('L\'identifiant de l\'auteur passé doit être un entier valide.');
         }
 
-        $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FAC, FCC_date, FCC_fk_FNC, FCC_email FROM t_frm_commentc WHERE FCC_fk_FAC = :author_id ORDER BY FCC_date DESC');
+        $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FAC, FCC_date, FCC_fk_FNC, FCC_email, FCC_username FROM t_frm_commentc WHERE FCC_fk_FAC = :author_id ORDER BY FCC_date DESC');
 
         $req->bindValue(':author_id', $author_id, \PDO::PARAM_INT);
 
@@ -67,8 +68,8 @@ class CommentsManagerPDO extends CommentsManager
      */
     protected function modify(Comment $comment)
     {
-        $req = $this->dao->prepare('UPDATE comment SET content = :content WHERE id = :id');
-        $req->bindValue(':content', $comment->content());
+        $req = $this->dao->prepare('UPDATE t_frm_commentc SET FCC_content = :content WHERE FCC_id = :id');
+        $req->bindValue(':content', $comment->FCC8content());
         $req->bindValue(':id', $comment->id());
 
         $req->execute();
@@ -81,7 +82,7 @@ class CommentsManagerPDO extends CommentsManager
      */
     public function get($id)
     {
-        $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FNC, FCC_email FROM t_frm_commentc WHERE FCC_id = :id GROUP BY FCC_fk_FNC');
+        $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FNC, FCC_email, FCC_username FROM t_frm_commentc WHERE FCC_id = :id GROUP BY FCC_fk_FNC');
         $req->bindValue(':id', (int) $id, \PDO::PARAM_INT);
         $req->execute();
 
@@ -97,7 +98,7 @@ class CommentsManagerPDO extends CommentsManager
      */
     public function delete($id)
     {
-        $this->dao->execute('DELETE FROM t_frm_commentc WHERE FCC_id = '.(int) $id);
+        $this->dao->exec('DELETE FROM t_frm_commentc WHERE FCC_id = '.(int) $id);
     }
 
     /**
@@ -120,7 +121,7 @@ class CommentsManagerPDO extends CommentsManager
         }
 
         // TODO : Requete a revoir. Divise en 2.
-        $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FAC, FCC_date, FCC_fk_FNC, FCC_email FROM t_frm_commentc WHERE FCC_fk_FNC = :news ORDER BY FCC_date DESC');
+        $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FAC, FCC_date, FCC_fk_FNC, FCC_email, FCC_username FROM t_frm_commentc WHERE FCC_fk_FNC = :news ORDER BY FCC_date DESC');
 
         $req->bindValue(':news', $news_id, \PDO::PARAM_INT);
 

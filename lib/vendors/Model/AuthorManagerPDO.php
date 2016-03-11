@@ -26,7 +26,8 @@ class AuthorManagerPDO extends AuthorManager
         $req->bindValue(':lastname', $author->FAC_lastname());
         $req->bindValue(':email', $author->FAC_email());
         $req->bindValue(':username', $author->FAC_username());
-        $req->bindValue(':password', $author->FAC_password());
+        $req->bindValue(':password', crypt($author->FAC_password(), \Entity\Author::SALT));
+        //$req->bindValue(':password', crypt($author->FAC_password(), \Entity\Author::SALT));
 
         $req->execute();
     }
@@ -43,6 +44,7 @@ class AuthorManagerPDO extends AuthorManager
 
         $req->bindValue(':username', $login);
         $req->bindValue(':password', $pass);
+        //$req->bindValue(':password', crypt($pass, \Entity\Author::SALT));
 
         $req->execute();
 
@@ -101,30 +103,6 @@ class AuthorManagerPDO extends AuthorManager
         $selectedUser = $selectUniqueSpecificUser->fetch();
 
         return $selectedUser;
-    }
-
-    /**
-     * Obtenir l'identifiant du user connecter
-     * @param $login username saisie
-     * @param $pass password saisie
-     * @return null
-     */
-    public function getIdUser($login, $pass)
-    {
-        $req = $this->dao->prepare('SELECT FAC_id FROM t_frm_authorc WHERE FAC_username = :username AND FAC_password = :password');
-
-        $req->bindValue(':username', $login);
-        $req->bindValue(':password', $pass);
-
-        $req->execute();
-
-        $req->setFetchMode(\PDO::FETCH_OBJ);
-
-        if($authorConnected = $req->fetch())
-        {
-            return $authorConnected;
-        }
-        return null;
     }
 
     /**

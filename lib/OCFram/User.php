@@ -12,6 +12,7 @@ session_start();
 
 class User
 {
+
     public function getAttribute($attr)
     {
         return isset($_SESSION[$attr]) ? $_SESSION[$attr] : null;
@@ -68,5 +69,15 @@ class User
     public function setFlash($value)
     {
         $_SESSION['flash'] = $value;
+    }
+
+    public function setRule($rule)
+    {
+        $_SESSION['rule'] = (int) $rule;
+    }
+
+    public function rule()
+    {
+        return $_SESSION['rule'];
     }
 }

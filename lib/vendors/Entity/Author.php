@@ -14,6 +14,7 @@ use \OCFram\Entity;
 class Author extends Entity
 {
     protected $FAC_lastname,
+                $password,
                 $FAC_firstname,
                 $FAC_email,
                 $FAC_id,
@@ -22,6 +23,7 @@ class Author extends Entity
                 $FAC_rule;
 
     const RULE_ADMIN = 1;
+    const SALT = '$2x$';
 
     public function isValid()
     {
@@ -30,22 +32,22 @@ class Author extends Entity
 
     public function isValidConnectify()
     {
-        return !(empty($this->FAC_username) || empty($this->FAC_password));
+        return !(empty($this->FAC_username) || empty($this->FAC_password) || empty($this->password)) && ($this->password == $this->FAC_password);
     }
 
     public function FAC_firstname()
     {
-        return trim($this->FAC_firstname);
+        return utf8_decode(trim($this->FAC_firstname));
     }
 
     public function FAC_lastname()
     {
-        return trim($this->FAC_lastname);
+        return utf8_decode(trim($this->FAC_lastname));
     }
 
     public function FAC_username()
     {
-        return trim($this->FAC_username);
+        return utf8_decode(trim($this->FAC_username));
     }
 
     public function FAC_id()
@@ -59,15 +61,18 @@ class Author extends Entity
         return trim($this->FAC_password);
     }
 
+    public function password()
+    {
+        return trim($this->password);
+    }
+
     public function FAC_email()
     {
-        //return crypt(trim($this->FAC_password));
-        return trim($this->FAC_email);
+        return utf8_decode(trim($this->FAC_email));
     }
 
     public function FAC_rule()
     {
-        //return crypt(trim($this->FAC_password));
         return $this->FAC_rule;
     }
 
@@ -78,7 +83,7 @@ class Author extends Entity
 
     public function setFAC_email($email)
     {
-        $this->FAC_email = $email;
+        $this->FAC_email = utf8_decode(trim($email));
     }
 
     public function setFAC_id($id)
@@ -88,21 +93,26 @@ class Author extends Entity
 
     public function setFAC_firstname($firstname)
     {
-        $this->FAC_firstname = $firstname;
+        $this->FAC_firstname = utf8_decode(trim($firstname));
     }
 
     public function setFAC_lastname($lastname)
     {
-        $this->FAC_lastname = $lastname;
+        $this->FAC_lastname = utf8_decode(trim($lastname));
     }
 
     public function setFAC_password($password)
     {
-        $this->FAC_password = $password;
+        $this->FAC_password = trim($password);
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = trim($password);
     }
 
     public function setFAC_username($username)
     {
-        $this->FAC_username = $username;
+        $this->FAC_username = utf8_decode(trim($username));
     }
 }

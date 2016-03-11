@@ -45,7 +45,7 @@ class News extends Entity
             $this->erreurs[] = self::TITRE_INVALIDE;
         }
 
-        $this->FNC_title = $title;
+        $this->FNC_title = utf8_decode(trim($title));
     }
 
     public function setFNC_content($content)
@@ -55,7 +55,7 @@ class News extends Entity
             $this->erreurs[] = self::CONTENU_INVALIDE;
         }
 
-        $this->FNC_content = $content;
+        $this->FNC_content = utf8_decode(trim($content));
     }
 
     public function setFNC_fk_FAC($author_id)
@@ -81,7 +81,7 @@ class News extends Entity
     //   GETTERS   //
     public function FNC_content()
     {
-        return $this->FNC_content;
+        return utf8_decode(trim($this->FNC_content));
     }
 
     public function FNC_fk_FAC()
@@ -96,7 +96,7 @@ class News extends Entity
 
     public function FNC_title()
     {
-        return $this->FNC_title;
+        return utf8_decode(trim($this->FNC_title));
     }
 
     public function FNC_id()

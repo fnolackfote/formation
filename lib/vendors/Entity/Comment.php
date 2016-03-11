@@ -17,6 +17,7 @@ class Comment extends Entity
               $FCC_id,
               $FCC_date,
               $FCC_email,
+                $FCC_username,
               $FCC_fk_FAC,
               $FCC_fk_FNC;
 
@@ -41,7 +42,7 @@ class Comment extends Entity
             $this->errors[] = self::CONTENU_INVALIDE;
         }
 
-        $this->FCC_content = $content;
+        $this->FCC_content = utf8_decode(trim($content));
     }
 
     public function setFCC_date(\DateTime $date)
@@ -61,12 +62,22 @@ class Comment extends Entity
 
     public function setFCC_email($email)
     {
-        $this->FCC_email = $email;
+        $this->FCC_email = utf8_decode(trim($email));
     }
 
     public function setFCC_id($id)
     {
         $this->FCC_id = (int) $id;
+    }
+
+    public function setFCC_username($username)
+    {
+        $this->FCC_username = utf8_decode(trim($username));
+    }
+
+    public function FCC_username()
+    {
+        return utf8_decode(trim($this->FCC_username));
     }
 
     public function FCC_id()
@@ -76,7 +87,7 @@ class Comment extends Entity
 
     public function FCC_email()
     {
-        return $this->FCC_email;
+        return utf8_decode(trim($this->FCC_email));
     }
 
     public function FCC_fk_FAC()
@@ -91,7 +102,7 @@ class Comment extends Entity
 
     public function FCC_content()
     {
-        return $this->FCC_content;
+        return utf8_decode(trim($this->FCC_content));
     }
 
     public function FCC_fk_FNC()

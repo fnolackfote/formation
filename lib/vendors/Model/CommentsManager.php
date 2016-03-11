@@ -18,7 +18,7 @@ abstract class CommentsManager extends Manager
      * @param Comment $comment Le commentaire à ajouter
      * @return void
      */
-    abstract protected function add(Comment $comment, $user_id = null);
+    abstract protected function add(Comment $comment);
 
     /**
      * Méthode de modification ce commentaires

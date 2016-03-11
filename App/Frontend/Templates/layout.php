@@ -24,7 +24,6 @@
                 <h1><a href="/">Mon super site</a></h1>
                 <p>Comment ca, il n'y a presque rien ?</p>
             </header>
-
             <nav>
                 <ul>
                     <li><a href="/">Accueil</a></li>
@@ -47,7 +46,10 @@
                      <?php /** @var \OCFram\Page $content */ ?>
                     <?= $content ?>
                 </section>
-
+                <div id="content-user-master">
+                    <p id="content-user"> <?=  !empty($user->getAttribute('username')) ? $user->getAttribute('username') : '' ?></p>
+                    <p id="content-rule"><?= !empty($user->getAttribute('rule')) ? '(ADMIN)' : '' ?></p>
+                </div>
             </div>
 
             <footer></footer>

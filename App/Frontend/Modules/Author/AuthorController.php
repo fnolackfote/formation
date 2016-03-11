@@ -43,8 +43,14 @@ class AuthorController extends BackController
 
         if($formHandler->process())
         {
+            $this->app->user()->setFlash('Connecte en tant que <b>'.$author->FAC_username().'</b>');
+            $this->app->user()->setSessionUser($author->FAC_id());
+            $this->app->user()->setAttribute('username', $author->FAC_username());
+            $this->app->user()->setAttribute('rule', $author->FAC_rule());
+            $this->app->user()->setRule($author->FAC_rule());
+            $this->app->user()->setAuthenticated(true);
             $this->app->user()->setFlash('Nouvel Utilisateur/Auteur Crée !');
-            $this->app->httpResponse()->redirect('.');
+            $this->app->httpResponse()->redirect('/admin/');
         }
         $this->page->addVar('author', $author);
         $this->page->addVar('formNewAuthor', $form->createView());

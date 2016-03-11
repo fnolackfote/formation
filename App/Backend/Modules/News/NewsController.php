@@ -59,8 +59,9 @@ class NewsController extends BackController
      */
     public function executeDelete(HTTPRequest $request)
     {
-        $newsId = $request->getData('id');
-
+        $newsId = $request->getData('news_id');
+        var_dump($request->getData('news_id'));
+        die();
         $this->managers->getManagerOf('News')->delete($newsId);
         $this->managers->getManagerOf('Comments')->deleteFromNews($newsId);
 
@@ -75,11 +76,9 @@ class NewsController extends BackController
      */
     public function processForm(HTTPRequest $request)
     {
-
         if($request->method() == 'POST')
         {
             $news = new News([
-                //'author' => $request->postData('author'),
                 'FNC_title' => $request->postData('FNC_title'),
                 'FNC_content' => $request->postData('FNC_content')
             ]);

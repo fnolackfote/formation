@@ -17,7 +17,10 @@ abstract class Field
                 $label,
                 $name,
                 $value,
+                $length,
                 $requir = '',
+                $name2 = '',
+                $equalTo = '',
                 $validators = [];
 
 
@@ -68,12 +71,21 @@ abstract class Field
         return $this->requir;
     }
 
+    public function equalTo()
+    {
+        return $this->equalTo;
+    }
+
+    public function setEqualTo($equalTo)
+    {
+        $this->equalTo = $equalTo;
+    }
 
 
-    /*public function length()
+    public function length()
     {
         return $this->length;
-    }*/
+    }
 
     public function validators()
     {
@@ -99,14 +111,14 @@ abstract class Field
         }
     }
 
-    /*public function setLength($length)
+    public function setLength($length)
     {
         $length = (int) $length;
         if($length > 0)
         {
             $this->length = $length;
         }
-    }*/
+    }
 
     public function setName($name)
     {
