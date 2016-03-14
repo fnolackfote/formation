@@ -29,3 +29,6 @@
   * Mails. 
     * Lorsqu'un nouveau commentaires est posté, envoyé un mail a tous les gens qui ont commenté cette meme news précédement.
 
+# 3 - CSS : Fix the CSS error when text is too long.
+* Try to enter a very long text in title and text of a News and observe the result. (Long text without space)
+* Fix visual problem by adding somes CSS rules.
