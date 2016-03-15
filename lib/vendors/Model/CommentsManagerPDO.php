@@ -69,7 +69,7 @@ class CommentsManagerPDO extends CommentsManager
     protected function modify(Comment $comment)
     {
         $req = $this->dao->prepare('UPDATE t_frm_commentc SET FCC_content = :content WHERE FCC_id = :id');
-        $req->bindValue(':content', $comment->FCC8content());
+        $req->bindValue(':content', $comment->FCC_content());
         $req->bindValue(':id', $comment->id());
 
         $req->execute();
@@ -82,15 +82,17 @@ class CommentsManagerPDO extends CommentsManager
      */
     public function get($id)
     {
-        $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FNC, FCC_email, FCC_username FROM t_frm_commentc WHERE FCC_id = :id GROUP BY FCC_fk_FNC');
+        if(!ctype_digit($id))
+        {
+            throw new \InvalidArgumentException('La valeur passé doit être un entier valide.');
+        }
+        $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FNC, FCC_email, FCC_username, FCC_fk_FAC FROM t_frm_commentc WHERE FCC_id = :id GROUP BY FCC_fk_FNC');
         $req->bindValue(':id', (int) $id, \PDO::PARAM_INT);
         $req->execute();
 
         $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
 
-        $comments = $req->fetchAll();
-
-        return $comments;
+        return $req->fetch();
     }
 
     /**
@@ -98,6 +100,10 @@ class CommentsManagerPDO extends CommentsManager
      */
     public function delete($id)
     {
+        if(!ctype_digit($id))
+        {
+            throw new \InvalidArgumentException('La valeur passé doit être un entier valide.');
+        }
         $this->dao->exec('DELETE FROM t_frm_commentc WHERE FCC_id = '.(int) $id);
     }
 
@@ -106,6 +112,10 @@ class CommentsManagerPDO extends CommentsManager
      */
     public function deleteFromNews($news_id)
     {
+        if(!ctype_digit($news_id))
+        {
+            throw new \InvalidArgumentException('La valeur passé doit être un entier valide.');
+        }
         $this->dao->exec('DELETE FROM t_frm_commentc WHERE FCC_fk_FNC = '.(int) $news_id);
     }
 
@@ -120,7 +130,6 @@ class CommentsManagerPDO extends CommentsManager
             throw new \InvalidArgumentException('L\'identifiant de la news passé doit être un entier valide.');
         }
 
-        // TODO : Requete a revoir. Divise en 2.
         $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FAC, FCC_date, FCC_fk_FNC, FCC_email, FCC_username FROM t_frm_commentc WHERE FCC_fk_FNC = :news ORDER BY FCC_date DESC');
 
         $req->bindValue(':news', $news_id, \PDO::PARAM_INT);
@@ -128,7 +137,6 @@ class CommentsManagerPDO extends CommentsManager
         $req->execute();
 
         $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
-        //$req->setFetchMode(\PDO::FETCH_OBJ);
 
         $comments = $req->fetchAll();
 
@@ -138,5 +146,39 @@ class CommentsManagerPDO extends CommentsManager
         }
 
         return $comments;
+    }
+
+    /**
+     * @param int $news l'id de la news
+     * @return mixed
+     */
+    public function getCommentcByUsingNewscIdExceptAuthorcId($news_id, $author_id)
+    {
+        if(!ctype_digit($news_id))
+        {
+            throw new \InvalidArgumentException('L\'identifiant de la news passé doit être un entier valide.');
+        }
+
+        $requete = 'SELECT FCC_id, FCC_email, FCC_fk_FNC, FCC_fk_FAC, FCC_username FROM t_frm_commentc INNER JOIN t_frm_authorc ON FCC_fk_FAC = FAC_id  AND FCC_fk_FNC = :id_news';
+        if(!empty($author_id))
+        {
+            $requete .= ' AND FAC_id <> :id_author';
+        }
+
+        $requete .= ' GROUP BY FCC_fk_FAC, FCC_fk_FNC ORDER BY FCC_id DESC';
+
+
+        $req = $this->dao->prepare($requete);
+        $req->bindValue(':id_author', $author_id, \PDO::PARAM_INT);
+
+        if(!empty($author_id)) {
+            $req->bindValue(':id_news', $news_id, \PDO::PARAM_INT);
+        }
+
+        $req->execute();
+
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
+
+        return $req->fetchAll();
     }
 }

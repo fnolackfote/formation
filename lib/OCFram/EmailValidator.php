@@ -19,6 +19,6 @@ class EmailValidator extends Validator
 
     public function isValid($value)
     {
-        return !empty($value) ? filter_var($value, FILTER_VALIDATE_EMAIL) : true;
+        return empty($value) ? true : filter_var($value, FILTER_VALIDATE_EMAIL) ;
     }
 }

@@ -27,6 +27,46 @@ abstract class Application
         $this->name = '';
     }
 
+    //TODO A terminer.
+    public function getHref($action)
+    {
+        $router = new Router;
+
+        $xml = new \DOMDocument;
+        $xml->load(__DIR__.'/../../App/'.$this->name.'/Config/routes.xml');
+
+        $routes = $xml->getElementsByTagName('route');
+
+        foreach($routes as $route) {
+            if($route->getAttibute('action') == $action) {
+                $vars = [];
+                if ($route->hasAttribute('vars')) {
+                    $vars = explode(',', $route->getAttribute('vars'));
+                }
+                $router->addRoute(new Route($route->getAttribute('url'), $route->getAttribute('module'), $route->getAttribute('action'), $vars));
+                break;
+            }
+        }
+
+        try
+        {
+            // On r�cup�re la route correspondante � l'URL.
+            $matchedRoute = $router->getRoute($this->httpRequest->requestURI());
+        }
+        catch (\RuntimeException $e)
+        {
+            if ($e->getCode() == Router::NO_ROUTE)
+            {
+                // Si aucune route ne correspond, c'est que la page demand�e n'existe pas.
+                $this->httpResponse->redirect404();
+            }
+        }
+        $_GET = array_merge($_GET, $matchedRoute->vars());
+
+        $site = $_SERVER['SERVER_NAME'];
+        return $site.'/'.$action;
+    }
+
     public function getController()
     {
         $router = new Router;
@@ -68,9 +108,9 @@ abstract class Application
         // On ajoute les variables de l'URL au tableau $_GET.
         $_GET = array_merge($_GET, $matchedRoute->vars());
 
-        // On instancie le contr�leur.
+        // On instancie le contr�leur.      App\Backend\Modules\News\NewsController
         $controllerClass = 'App\\'.$this->name.'\\Modules\\'.$matchedRoute->module().'\\'.$matchedRoute->module().'Controller';
-        return new $controllerClass($this, $matchedRoute->module(), $matchedRoute->action());
+        return new $controllerClass($this, $matchedRoute->module(), $matchedRoute->action());       // App\Backend\Modules\News\NewsController(BackendApplication, News, insert)
     }
 
     abstract public function run();

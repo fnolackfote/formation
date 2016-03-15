@@ -27,34 +27,42 @@ class AuthorController extends BackController
                 'FAC_firstname' => $request->postData('FAC_firstname'),
                 'FAC_email' => $request->postData('FAC_email'),
                 'FAC_username' => $request->postData('FAC_username'),
-                'FAC_password' => $request->postData('FAC_password')
+                'FAC_password' => $request->postData('FAC_password'),
+                'password' => $request->postData('password')
             ]);
         }
         else {
             $author = new Author;
         }
 
-        $formBuilder = new AuthorFormBuilder($author);
-        $formBuilder->build();
+        if(!$this->app->user()->isAuthenticated()) {
+            $formBuilder = new AuthorFormBuilder($author);
+            $formBuilder->build();
 
-        $form = $formBuilder->form();
+            $form = $formBuilder->form();
+            if($author->password() == $author->FAC_password()) {
+                $formHandler = new FormHandler($form, $this->managers->getManagerOf('Author'), $request);
 
-        $formHandler = new FormHandler($form, $this->managers->getManagerOf('Author'), $request);
-
-        if($formHandler->process())
-        {
-            $this->app->user()->setFlash('Connecte en tant que <b>'.$author->FAC_username().'</b>');
-            $this->app->user()->setSessionUser($author->FAC_id());
-            $this->app->user()->setAttribute('username', $author->FAC_username());
-            $this->app->user()->setAttribute('rule', $author->FAC_rule());
-            $this->app->user()->setRule($author->FAC_rule());
-            $this->app->user()->setAuthenticated(true);
-            $this->app->user()->setFlash('Nouvel Utilisateur/Auteur Crée !');
-            $this->app->httpResponse()->redirect('/admin/');
+                if ($formHandler->process()) {
+                    $this->app->user()->setFlash('Connecte en tant que <b>' . $author->FAC_username() . '</b>');
+                    $this->app->user()->setSessionUser($author->FAC_id());
+                    $this->app->user()->setAttribute('username', $author->FAC_username());
+                    $this->app->user()->setAttribute('rule', $author->FAC_rule());
+                    $this->app->user()->setRule($author->FAC_rule());
+                    $this->app->user()->setAuthenticated(true);
+                    $this->app->user()->setFlash('Nouvel Utilisateur/Auteur Crée !');
+                    $this->app->httpResponse()->redirect('/admin/');
+                }
+            } else {
+                $this->page->addVar('errorPass', "Les mots de passe doivent être identique");
+            }
+            $this->page->addVar('author', $author);
+            $this->page->addVar('formNewAuthor', $form->createView());
+            $this->page->addVar('title', 'Nouvel Auteur');
+        } else {
+            $this->app->user()->setFlash('Vous avez deja un compte. Fermez la session actuelle !');
+            $this->app->httpResponse()->redirect('.');
         }
-        $this->page->addVar('author', $author);
-        $this->page->addVar('formNewAuthor', $form->createView());
-        $this->page->addVar('title', 'Nouvel Auteur');
     }
 
     /**
@@ -64,13 +72,23 @@ class AuthorController extends BackController
      */
     public function executeDetail(HTTPRequest $request)
     {
-        $author_id = $request->getData('author_id');
-        $userPost = $this->managers->getManagerOf('Author')->getAuthorcUniqueByAuthorcId($author_id);
-        //$news_author_a = $this->managers->getManagerOf('Author')->getNewscByUsingAuthorId($author_id);
+        if($this->app->user()->isAuthenticated()) {
+            $author_id = $request->getData('author_id');
+            $userPost = $this->managers->getManagerOf('Author')->getAuthorcUniqueByAuthorcId($author_id);
 
-        $this->page->addVar('author', $userPost);
-        $this->page->addVar('news_author_a', $this->managers->getManagerOf('News')->getNewscByUsingAuthorId($author_id));
-        $this->page->addVar('comment_author_a', $this->managers->getManagerOf('Comments')->getCommentcByUsingAuthorId($author_id));
-        $this->page->addVar('title', 'Detail de l\'auteur');
+            $this->page->addVar('author', $userPost);
+            $this->page->addVar('news_author_a', $this->managers->getManagerOf('News')->getNewscByUsingAuthorId($author_id));
+            $this->page->addVar('comment_author_a', $this->managers->getManagerOf('Comments')->getCommentcByUsingAuthorId($author_id));
+            $this->page->addVar('title', 'Detail de l\'auteur');
+        }
+        else {
+            $this->app->user()->setFlash('Vous n\'etes connectez. Pour effectuer cette action vous devez vous connecter !');
+            $this->app->httpResponse()->redirect('.');
+        }
+    }
+
+    public function executePass()
+    {
+        $this->managers->getManagerOf('Author')->getConnexion2();
     }
 }

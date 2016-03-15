@@ -26,7 +26,6 @@ class ConnexionController extends BackController
 
             if(!is_null($connected))
             {
-
                 $this->app->user()->setFlash('Connecte en tant que <b>'.$connected->FAC_username().'</b>');
                 $this->app->user()->setSessionUser($connected->FAC_id());
                 $this->app->user()->setAttribute('username', $connected->FAC_username());
@@ -53,6 +52,10 @@ class ConnexionController extends BackController
             session_start();
             $this->app->user()->setFlash('Deconnexion Reussie');
 
+            $this->app->httpResponse()->redirect('.');
+        }
+        else {
+            $this->app->user()->setFlash('Vous n\'èetes pas connecté');
             $this->app->httpResponse()->redirect('.');
         }
     }

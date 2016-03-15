@@ -46,11 +46,6 @@ class User
         return $_SESSION['user_id'];
     }
 
-    public function isAdmin($admin_rule = 1)
-    {
-        return $this->isAuthenticated() && (\Entity\Author::RULE_ADMIN == $admin_rule);
-    }
-
     public function setAttribute($attr, $value)
     {
         $_SESSION[$attr] = $value;

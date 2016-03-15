@@ -37,17 +37,17 @@ class Author extends Entity
 
     public function FAC_firstname()
     {
-        return utf8_decode(trim($this->FAC_firstname));
+        return html_entity_decode(trim($this->FAC_firstname));
     }
 
     public function FAC_lastname()
     {
-        return utf8_decode(trim($this->FAC_lastname));
+        return html_entity_decode(trim($this->FAC_lastname));
     }
 
     public function FAC_username()
     {
-        return utf8_decode(trim($this->FAC_username));
+        return html_entity_decode(trim($this->FAC_username));
     }
 
     public function FAC_id()
@@ -57,18 +57,17 @@ class Author extends Entity
 
     public function FAC_password()
     {
-        //return crypt(trim($this->FAC_password));
-        return trim($this->FAC_password);
+        return html_entity_decode(trim($this->FAC_password));
     }
 
     public function password()
     {
-        return trim($this->password);
+        return html_entity_decode(trim($this->password));
     }
 
     public function FAC_email()
     {
-        return utf8_decode(trim($this->FAC_email));
+        return html_entity_decode(trim($this->FAC_email));
     }
 
     public function FAC_rule()
@@ -83,7 +82,7 @@ class Author extends Entity
 
     public function setFAC_email($email)
     {
-        $this->FAC_email = utf8_decode(trim($email));
+        $this->FAC_email = htmlentities(trim($email));
     }
 
     public function setFAC_id($id)
@@ -93,26 +92,26 @@ class Author extends Entity
 
     public function setFAC_firstname($firstname)
     {
-        $this->FAC_firstname = utf8_decode(trim($firstname));
+        $this->FAC_firstname = htmlentities(trim($firstname));
     }
 
     public function setFAC_lastname($lastname)
     {
-        $this->FAC_lastname = utf8_decode(trim($lastname));
+        $this->FAC_lastname = htmlentities(trim($lastname));
     }
 
     public function setFAC_password($password)
     {
-        $this->FAC_password = trim($password);
+        $this->FAC_password = htmlentities(trim($password));
     }
 
     public function setPassword($password)
     {
-        $this->password = trim($password);
+        $this->password = htmlentities(trim($password));
     }
 
     public function setFAC_username($username)
     {
-        $this->FAC_username = utf8_decode(trim($username));
+        $this->FAC_username = htmlentities(trim($username));
     }
 }

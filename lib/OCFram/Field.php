@@ -20,7 +20,6 @@ abstract class Field
                 $length,
                 $requir = '',
                 $name2 = '',
-                $equalTo = '',
                 $validators = [];
 
 
@@ -70,17 +69,6 @@ abstract class Field
     {
         return $this->requir;
     }
-
-    public function equalTo()
-    {
-        return $this->equalTo;
-    }
-
-    public function setEqualTo($equalTo)
-    {
-        $this->equalTo = $equalTo;
-    }
-
 
     public function length()
     {

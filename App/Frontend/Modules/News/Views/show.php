@@ -12,9 +12,9 @@
     <meta charset="utf-8" />
 </head>
 <body>
-<p>Par <a href="/author-<?= $author['FAC_id'] ?>.html"><b><em><?= $author['FAC_username'] ?></em></b></a>, le <?= $news['FNC_dateadd']->format('d/m/Y à H\hi') ?></p>
-<h2><?= $news['FNC_title'] ?></h2>
-<p><?= nl2br($news['FNC_content']) ?></p>
+<p>Par <?php if($user->isAuthenticated()) { ?><a href="/author-<?= $author['FAC_id'] ?>.html"> <?php } ?><b><em><?= $author['FAC_username'] ?></em></b><?php if($user->isAuthenticated()) { ?></a><?php }?>, le <?= $news['FNC_dateadd']->format('d/m/Y à H\hi') ?></p>
+<h2 id="news-header"><?= htmlentities(trim($news['FNC_title'])) ?></h2>
+<p id="news-content"><?= htmlentities(nl2br(trim($news['FNC_content']))) ?></p>
 
 <?php if ($news['FNC_dateadd'] != $news['FNC_dateedit']) { ?>
     <p style="text-align: right;"><small><em>Modifiée le <?= $news['FNC_dateedit']->format('d/m/Y à H\hi') ?></em></small></p>
@@ -33,12 +33,15 @@ foreach($comments as $comment)
         <legend>
             Posté par <strong><?= empty($authorComment[$comment->FCC_id()]) ? $comment->FCC_username() : $authorComment[$comment->FCC_id()]->FAC_username() ?></strong> le <?= date_format($comment->FCC_date(), 'd/m/Y à H\hi') ?>
             <?php if($user->isAuthenticated() && $user->rule() == \Entity\Author::RULE_ADMIN) { ?> -
+                <?php if($user->sessionUser() == $comment->FCC_fk_FAC()){ ?>
+                    <a href="admin/comment-update-<?= $comment->FCC_id() ?>.html">Modifier</a>
+                <?php } ?>
                 <a href="admin/comment-delete-<?= $comment->FCC_id() ?>.html">Supprimer</a>
             <?php } else if($user->isAuthenticated() && $user->sessionUser() == $comment->FCC_fk_FAC()) { ?> -
                 <a href="admin/comment-update-<?= $comment->FCC_id() ?>.html">Modifier</a>
             <?php } ?>
         </legend>
-        <p><?= nl2br(htmlspecialchars($comment->FCC_content())) ?></p>
+        <p><?= nl2br(htmlentities($comment->FCC_content())) ?></p>
     </fieldset>
     <?php
 }

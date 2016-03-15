@@ -14,7 +14,7 @@
         <title>
             <?php /** @var string $title */ ?>
             <?= isset($title) ? $title : 'Mon super site' ?></title>
-        <meta charset="utf-8" />
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="/css/Envision.css" type="text/css" />
     </head>
 

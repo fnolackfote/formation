@@ -49,7 +49,7 @@ class AuthorFormBuilder extends FormBuilder
             'require' => 'require',
             'maxLength' => 100,
             'validators' => [
-                new MaxLengthValidator('le nom entré est trop long (50 caractères maximum)', 100),
+                new MaxLengthValidator('le mail entré est trop long (100 caractères maximum)', 100),
                 new NotNullValidator('Merci de spécifier votre nom'),
                 new EmailValidator('Cet email est non valide')
             ],
@@ -79,14 +79,12 @@ class AuthorFormBuilder extends FormBuilder
         ->add(new StringField([
             'label' => 'Confirmer Mot de passe',
             'name' => 'password',
-            'equalTo' => 'FAC_password',
             'type' => 'password',
             'require' => 'require',
             'maxLength' => 20,
             'validators' => [
                 new MaxLengthValidator('le mot de passe est trop long (20 caractères maximum)', 20),
                 new NotNullValidator('Merci de confirmer votre mot de passe')
-                //new EqualToValidator('Confirmer le mot de passe')
             ],
         ]));
     }

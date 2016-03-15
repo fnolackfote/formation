@@ -53,6 +53,10 @@ class NewsManagerPDO extends NewsManager
      */
     public function getNewscUniqueUsingNewsId($newsc_id)
     {
+        if(!ctype_digit($newsc_id))
+        {
+            throw new \InvalidArgumentException('La valeur passé doit être un entier valide.');
+        }
         $selectNewscUsingNewsid = $this->dao->prepare('SELECT FNC_id, FNC_title, FNC_content, FNC_dateadd, FNC_dateedit, FNC_fk_FAC FROM t_frm_newsc WHERE FNC_id = :news_id ORDER BY FNC_id');
         $selectNewscUsingNewsid->bindValue('news_id', (int) $newsc_id, \PDO::PARAM_INT);
         $selectNewscUsingNewsid->execute();
@@ -68,6 +72,25 @@ class NewsManagerPDO extends NewsManager
         }
 
         return null;
+    }
+
+
+    /**
+     * Avoir la news par l'id du comment
+     */
+    public function getNewscIdUniqueUsingCommentId($comment_id)
+    {
+        if(!ctype_digit($comment_id))
+        {
+            throw new \InvalidArgumentException('La valeur passé doit être un entier valide.');
+        }
+        $selectNewscUsingNewsid = $this->dao->prepare('SELECT FNC_id FROM t_frm_newsc INNER JOIN t_frm_commentc ON FCC_fk_FNC = FNC_id AND FCC_id = :comment_id ORDER BY FNC_id');
+        $selectNewscUsingNewsid->bindValue('comment_id', (int) $comment_id, \PDO::PARAM_INT);
+        $selectNewscUsingNewsid->execute();
+
+        $selectNewscUsingNewsid->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\News');
+
+       return $selectNewscUsingNewsid->fetch();
     }
 
     /**
@@ -131,7 +154,7 @@ class NewsManagerPDO extends NewsManager
 
         $req->bindValue(':title', $news->FNC_title());
         $req->bindValue(':content', $news->FNC_content());
-        $req->bindValue(':id', $news->FNC_id(), \PDO::PARAM_INT);
+        $req->bindValue(':id', $news->id(), \PDO::PARAM_INT);
 
         $req->execute();
     }
@@ -141,6 +164,10 @@ class NewsManagerPDO extends NewsManager
      */
     public function delete($id)
     {
+        if(!ctype_digit($id))
+        {
+            throw new \InvalidArgumentException('La valeur passé doit être un entier valide.');
+        }
         $this->dao->exec('DELETE FROM t_frm_newsc WHERE FNC_id = '.(int) $id);
     }
 }

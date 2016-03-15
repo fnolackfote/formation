@@ -430,4 +430,35 @@ fieldset {
 	word-wrap: normal;
 	-ms-word-wrap: normal;
 }
-
+#news-content, #comment-content {
+	word-break: break-all;
+	word-wrap: normal;
+	-ms-word-wrap: normal;
+}
+#news-header {
+	word-break: break-all;
+	word-wrap: normal;
+	-ms-word-wrap: normal;
+}
+.date-content {
+	margin-top: -20px;
+	margin-bottom: -15px;
+	text-align: right;
+	color: #93BC0C;
+	font-size: 9px;
+}
+.detail-news-header {
+	color: #2180BC;
+}
+.detail-news-content {
+}
+.detail-comment-date {
+	margin-top: -10px;
+	margin-bottom: -17px;
+	text-align: left;
+	color: #93BC0C;
+	font-size: 9px;
+}
+.detail-comment-content {
+	margin-left: 12px;
+}

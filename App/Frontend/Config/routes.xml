@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <routes>
     <route url="/" module="News" action="index" ></route>
+    <route url="/pass" module="Author" action="pass" ></route>
     <route url="/news-([0-9]+)\.html" module="News" action="show" vars="FNC_id"></route>
     <route url="/detect" module="MobileDetect" action="detect"></route>
-    <route url="/comment-([0-9]+)\.html" module="News" action="insertComment" vars="news_id"></route>
     <route url="/newAuthor" module="Author" action="newAuthor"></route>
-    <route url="/sendMail" module="Mailer" action="mailer" var="comment_id"></route>
     <route url="/author-([0-9]+)\.html" module="Author" action="detail" vars="author_id"></route>
+    <route url="/comment-([0-9]+)\.html" module="News" action="insertComment" vars="news_id"></route>
+    <route url="/sendMail-([0-9]+)" module="Mailer" action="mailer" vars="id_news"></route>
 </routes>

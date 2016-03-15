@@ -14,6 +14,7 @@
 <h2>Inscription d'un nouvel auteur</h2>
 <form action="" method="post">
     <p>
+        <?= isset($errorPass) ? $errorPass : "" ?>
         <?= $formNewAuthor ?>
 
         <input type="submit" value="Valider" />

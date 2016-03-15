@@ -16,10 +16,7 @@ use \OCFram\FormHandler;
 
 class NewsController extends BackController
 {
-    /**
-     * @param HTTPRequest $request
-     */
-    public function executeIndex(HTTPRequest $request)
+    public function executeIndex()
     {
         $number_of_news = $this->app->config()->get('nombre_news');
         $number_of_case_per_news = $this->app->config()->get('nombre_caracteres');
@@ -50,7 +47,6 @@ class NewsController extends BackController
     public function executeShow(HTTPRequest $request)
     {
         $fnc_id = $request->getData('FNC_id');
-        $_SESSION['news_id'] = $fnc_id;
         $news = $this->managers->getManagerOf('News')->getNewscUniqueUsingNewsId($fnc_id);
         $userPostNews = $this->managers->getManagerOf('Author')->getAuthorcByNewsId($fnc_id);
         $commentNews = $this->managers->getManagerOf('Comments')->getListOf($fnc_id);
@@ -80,7 +76,9 @@ class NewsController extends BackController
     {
         $this->page->addVar('title', 'Ajout d\'un commentaire');
 
-        $fcc_fk_fnc = $_SESSION['news_id'];
+        if($request->getExists('news_id')) {
+            $fcc_fk_fnc = $request->getData('news_id');
+        }
 
         if($request->method() == 'POST') {
             $comment = new Comment([
@@ -94,17 +92,21 @@ class NewsController extends BackController
             $comment = new Comment;
         }
 
+
         $formBuilder = new CommentFormBuilder($comment);
         $formBuilder->build();
 
         $form = $formBuilder->form();
 
         $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
-
         if($formHandler->process())
         {
             $this->app->user()->setFlash('Le commentaire a bien été ajouté, merci !');
-            $this->app->httpResponse()->redirect('news-'.$fcc_fk_fnc.'.html');
+            if(!empty($this->app->user()->sessionUser())) {
+                $this->app->httpResponse()->redirect('/sendMail-' . $comment->FCC_fk_FNC());      //l'identifiant de la news.
+            } else {
+                $this->app->httpResponse()->redirect('news-'.$fcc_fk_fnc.'.html');
+            }
         }
         $this->page->addVar('comment', $comment);
         $this->page->addVar('formInsertComment', $form->createView());
