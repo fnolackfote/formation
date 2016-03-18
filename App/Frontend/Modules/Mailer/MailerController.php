@@ -8,16 +8,19 @@
 
 namespace App\Frontend\Modules\Mailer;
 
+use \App\Frontend\FrontendController;
 use \OCFram\BackController;
 use \OCFram\HTTPRequest;
 
 class MailerController extends BackController
 {
+    use FrontendController;
     /**
      * Envoyer un mail a tous les users ayant commentzer une news lorsque cette meme news viens d'être commente.
      * on recupere les email des comments. s'il n'y a pas d'email, on recupere les email des user a partir de l'id du comment.
      * @param HTTPRequest $request
      */
+
     public function executeMailer(HTTPRequest $request)
     {
         if ($request->getExists('id_news')) {
@@ -68,7 +71,8 @@ class MailerController extends BackController
             }
         }
         //redirection vers la page de la news.
-        $this->app->httpResponse()->redirect('news-'.$fcc_fk_fnc.'.html');
+        $this->app->httpResponse()->redirect('/news-'.$fcc_fk_fnc.'.html');
+        //$this->app->httpResponse()->redirect($this->app->getHref('show','Frontend', 'News',$fcc_fk_fnc));
         //$this->app->httpResponse()->redirect('/');
     }
 }

@@ -8,13 +8,17 @@
 
 namespace App\Backend\Modules\Connexion;
 
+use \OCFram\MainController;
 use \OCFram\BackController;
 use \OCFram\HTTPRequest;
 
 class ConnexionController extends BackController
 {
+    use MainController;
+
     public function executeIndex(HTTPRequest $request)
     {
+        $this->createMenu();
         $this->page->addVar('title', 'Connexion');
 
         if($request->postExists('login'))
@@ -32,7 +36,7 @@ class ConnexionController extends BackController
                 $this->app->user()->setAttribute('rule', $connected->FAC_rule());
                 $this->app->user()->setRule($connected->FAC_rule());
                 $this->app->user()->setAuthenticated(true);
-                $this->app->httpResponse()->redirect('/admin/');
+                $this->app->httpResponse()->redirect($this->app->getHref('index','Backend','News'));
             }
             else
             {
@@ -43,20 +47,22 @@ class ConnexionController extends BackController
 
     public function executeLogout()
     {
-        if($this->app->user()->isAuthenticated()) {
-            $this->page->addVar('title', 'Déconnexion');
+        $this->createMenu();
+        //if($this->app->user()->isAuthenticated()) {
+        $this->redirectUser();
+        $this->page->addVar('title', 'Déconnexion');
 
-            $this->app->user()->setAuthenticated(false);
-            session_unset();
-            session_destroy();
-            session_start();
-            $this->app->user()->setFlash('Deconnexion Reussie');
+        $this->app->user()->setAuthenticated(false);
+        session_unset();
+        session_destroy();
+        session_start();
+        $this->app->user()->setFlash('Deconnexion Reussie');
 
-            $this->app->httpResponse()->redirect('.');
-        }
+        $this->app->httpResponse()->redirect($this->app->getHref('index','Backend','News'));
+        /*}
         else {
-            $this->app->user()->setFlash('Vous n\'èetes pas connecté');
-            $this->app->httpResponse()->redirect('.');
-        }
+            $this->app->user()->setFlash('Vous n\'ètes pas connecté');
+            $this->app->httpResponse()->redirect($this->app->getHref('index','Frontend','News'));
+        }*/
     }
 }

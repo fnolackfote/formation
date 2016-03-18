@@ -27,7 +27,7 @@ class Router
     {
         foreach ($this->routes as $route)
         {
-            // Si la route correspond � l'URL
+            // Si la route correspond a l'URL
             if (($varsValues = $route->match($url)) !== false)
             {
                 // Si elle a des variables
@@ -36,21 +36,20 @@ class Router
                     $varsNames = $route->varsNames();
                     $listVars = [];
 
-                    // On cr�e un nouveau tableau cl�/valeur
-                    // (cl� = nom de la variable, valeur = sa valeur)
+                    // On crée un nouveau tableau clé/valeur
+                    // (clé = nom de la variable, valeur = sa valeur)
                     foreach ($varsValues as $key => $match)
                     {
-                        // La premi�re valeur contient enti�rement la chaine captur�e (voir la doc sur preg_match)
+                        // La première valeur contient entièrement la chaine capturée (voir la doc sur preg_match)
                         if ($key !== 0)
                         {
                             $listVars[$varsNames[$key - 1]] = $match;
                         }
                     }
 
-                    // On assigne ce tableau de variables ? la route
+                    // On assigne ce tableau de variables a la route
                     $route->setVars($listVars);
                 }
-
                 return $route;
             }
         }

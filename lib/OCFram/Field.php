@@ -8,7 +8,6 @@
 
 namespace OCFram;
 
-
 abstract class Field
 {
     use Hydrator;

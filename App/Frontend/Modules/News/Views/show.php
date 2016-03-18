@@ -14,7 +14,7 @@
 <body>
 <p>Par <?php if($user->isAuthenticated()) { ?><a href="/author-<?= $author['FAC_id'] ?>.html"> <?php } ?><b><em><?= $author['FAC_username'] ?></em></b><?php if($user->isAuthenticated()) { ?></a><?php }?>, le <?= $news['FNC_dateadd']->format('d/m/Y à H\hi') ?></p>
 <h2 id="news-header"><?= htmlentities(trim($news['FNC_title'])) ?></h2>
-<p id="news-content"><?= htmlentities(nl2br(trim($news['FNC_content']))) ?></p>
+<p id="news-content"><?= nl2br(htmlentities(trim($news['FNC_content']))) ?></p>
 
 <?php if ($news['FNC_dateadd'] != $news['FNC_dateedit']) { ?>
     <p style="text-align: right;"><small><em>Modifiée le <?= $news['FNC_dateedit']->format('d/m/Y à H\hi') ?></em></small></p>
@@ -47,7 +47,24 @@ foreach($comments as $comment)
 }
 ?>
 
-<p><a href="comment-<?= $news['FNC_id'] ?>.html">Ajouter un commentaire</a></p>
+<div id="comment-form"></div>
 
+<?php
+    //require_once 'insertComment.php';
+?>
+<p><a href="/comment-<?= $news['FNC_id'] ?>.html">Ajouter un commentaire</a></p>
+    <script>
+        /*$(document).ready(function(){
+            $.post()
+        });*/
+        $.post(
+            '/testJson',
+            false,
+            function(data) {
+                $('#comment-form').html(data);
+        },
+        'html'
+        );
+    </script>
 </body>
 </html>

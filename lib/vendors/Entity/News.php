@@ -81,7 +81,7 @@ class News extends Entity
     //   GETTERS   //
     public function FNC_content()
     {
-        return html_entity_decode(trim($this->FNC_content));
+        return htmlentities(trim($this->FNC_content));
     }
 
     public function FNC_fk_FAC()
@@ -96,7 +96,7 @@ class News extends Entity
 
     public function FNC_title()
     {
-        return html_entity_decode(trim($this->FNC_title));
+        return htmlentities(trim($this->FNC_title));
     }
 
     public function FNC_id()

@@ -8,6 +8,7 @@
 
 namespace App\Backend\Modules\News;
 
+use \OCFram\MainController;
 use \OCFram\BackController;
 use \OCFram\HTTPRequest;
 use \Entity\Comment;
@@ -18,11 +19,14 @@ use \FormBuilder\CommentFormBuilder;
 
 class NewsController extends BackController
 {
+    use MainController;
+
     /**
      * @param HTTPRequest $request
      */
     public function executeIndex(HTTPRequest $request)
     {
+        $this->createMenu();
         $this->page->addVar('title', 'Gestion des news');
 
         $manager = $this->managers->getManagerOf('News');
@@ -41,14 +45,17 @@ class NewsController extends BackController
      */
     public function executeInsert(HTTPRequest $request)
     {
-        if($this->app->user()->isAuthenticated()) {
-            $this->processForm($request);
-            $this->page->addVar('title', 'Ajout d\'une news');
-        }
+        $this->createMenu();
+        //if($this->app->user()->isAuthenticated()) {
+        $this->redirectUser();
+        $this->processForm($request);
+        $this->page->addVar('title', 'Ajout d\'une news');
+        /*}
         else {
             $this->app->user()->setFlash('Vous n\'etes pas authentifié pour effectuer cette action..');
-            $this->app->httpResponse()->redirect('.');
-        }
+            //$this->app->httpResponse()->redirect('.');
+            $this->app->httpResponse()->redirect($this->app->getHref('index','Frontend','News'));
+        }*/
     }
 
     /**
@@ -56,14 +63,17 @@ class NewsController extends BackController
      */
     public function executeUpdate(HTTPRequest $request)
     {
-        if($this->app->user()->isAuthenticated()) {
-            $this->processForm($request);
-            $this->page->addVar('title', 'Modification d\'une news');
-        }
+        $this->createMenu();
+        //if($this->app->user()->isAuthenticated()) {
+        $this->redirectUser();
+        $this->processForm($request);
+        $this->page->addVar('title', 'Modification d\'une news');
+        /*}
         else {
             $this->app->user()->setFlash('Vous n\'etes pas authentifié pour effectuer cette action..');
-            $this->app->httpResponse()->redirect('.');
-        }
+            //$this->app->httpResponse()->redirect('.');
+            $this->app->httpResponse()->redirect($this->app->getHref('index','Frontend','News'));
+        }*/
     }
 
     /**
@@ -72,24 +82,27 @@ class NewsController extends BackController
      */
     public function executeDelete(HTTPRequest $request)
     {
+        $this->createMenu();
         if($request->getExists('news_id')) {
             $newsId = $request->getData('news_id');
         }
 
         $news = $this->managers->getManagerOf('News')->getNewscUniqueUsingNewsId($newsId);
-
-        if($this->app->user()->isAuthenticated() && ($this->app->user()->rule() == \Entity\Author::RULE_ADMIN | $this->app->user()->sessionUser() == (int) $news->FNC_fk_FAC())) {
+        $this->redirectUser();
+        //if($this->app->user()->isAuthenticated() && ($this->app->user()->rule() == \Entity\Author::RULE_ADMIN | $this->app->user()->sessionUser() == (int) $news->FNC_fk_FAC())) {
+        if($this->app->user()->rule() == \Entity\Author::RULE_ADMIN | $this->app->user()->sessionUser() == (int) $news->FNC_fk_FAC()) {
             $this->managers->getManagerOf('News')->delete($newsId);
             $this->managers->getManagerOf('Comments')->deleteFromNews($newsId);
 
             $this->app->user()->setFlash('La news a bien été supprimée !');
 
-            $this->app->httpResponse()->redirect('.');
+            $this->app->httpResponse()->redirect($this->app->getHref('index','Backend', 'News'));
         }
-        else {
-            $this->app->user()->setFlash('Vous n\'avezpas les droits pour supprimer cette news !');
-            $this->app->httpResponse()->redirect('.');
-        }
+        /*else {
+            $this->app->user()->setFlash('Vous n\'avez pas les droits pour supprimer cette news !');
+            $this->app->httpResponse()->redirect($this->app->getHref('index','Frontend', 'News'));
+            //$this->app->httpResponse()->redirect($this->app->getHref('index','Frontend', 'News'));
+        }*/
     }
 
     /**
@@ -133,13 +146,13 @@ class NewsController extends BackController
         if ($news->isNew() | ($this->app->user()->rule() == \Entity\Author::RULE_ADMIN | $this->app->user()->sessionUser() == (int)$news->FNC_fk_FAC())) {
             if ($formHandler->process()) {
                 $this->app->user()->setFlash($news->isNew() ? 'La news a bien été ajoutée !' : 'La news a bien été modifiée !');
-                $this->app->httpResponse()->redirect('/admin/');
+                $this->app->httpResponse()->redirect($this->app->getHref('index','Backend', 'News'));
             }
             $this->page->addVar('form', $form->createView());
         }
         else {
             $this->app->user()->setFlash('Vous n\'etes pas auteur de cette news.');
-            $this->app->httpResponse()->redirect('.');
+            $this->app->httpResponse()->redirect($this->app->getHref('index','Frontend', 'News'));
         }
     }
 
@@ -149,6 +162,7 @@ class NewsController extends BackController
      */
     public function executeUpdateComment(HTTPRequest $request)
     {
+        $this->createMenu();
         $this->page->addVar('title', 'modification d\'un commentaire');
 
         if($request->getExists('id')) {
@@ -176,17 +190,19 @@ class NewsController extends BackController
         /*var_dump($comment);
         var_dump($this->app->user()->sessionUser());
         die();*/
-        if($this->app->user()->sessionUser() == $comment->FCC_fk_FAC()) {
-            if ($formHandler->process()) {
-                $this->app->user()->setFlash('Le commentaire a bien été modifié');
-                $this->app->httpResponse()->redirect('/news-' . $comment->FCC_fk_FNC() . '.html');
-            }
-            $this->page->addVar('form', $form->createView());
+        $this->redirectUser();
+        //if($this->app->user()->sessionUser() == $comment->FCC_fk_FAC()) {
+        if ($formHandler->process()) {
+            $this->app->user()->setFlash('Le commentaire a bien été modifié');
+            $this->app->httpResponse()->redirect('/comment-'.$comment->FCC_fk_FNC().'.html');
+            //$this->app->httpResponse()->redirect($this->app->getHref('index','Frontend',  $comment->FCC_fk_FNC()));
         }
+        $this->page->addVar('form', $form->createView());
+        /*}
         else {
             $this->app->user()->setFlash('Vous n\'avez aucun droit sur ce commentaire.');
-            $this->app->httpResponse()->redirect('.');
-        }
+            $this->app->httpResponse()->redirect($this->app->getHref('index','Frontend', 'News'));
+        }*/
     }
 
     /**
@@ -194,6 +210,7 @@ class NewsController extends BackController
      */
     public function executeDeleteComment(HTTPRequest $request)
     {
+        $this->createMenu();
         if($request->getExists('id')) {
             $fcc_id = $request->getData('id');
         }
@@ -201,7 +218,8 @@ class NewsController extends BackController
         if($this->app->user()->sessionUser() == \Entity\Author::RULE_ADMIN | $this->app->user()->sessionUser() == (int)$comment->FCC_fk_FAC()) {
             $this->managers->getManagerOf('Comments')->delete($fcc_id);
             $this->app->user()->setFlash('Le commentaire a bien été supprimé !');
-            $this->app->httpResponse()->redirect('/news-' . $comment->FCC_fk_FNC() . '.html');
+            $this->app->httpResponse()->redirect('/comment-'.$comment->FCC_fk_FNC().'.html');
+            //$this->app->httpResponse()->redirect($this->app->getHref('index','Frontend', 'Comment', $comment->FCC_fk_FNC()));
         }
     }
 }

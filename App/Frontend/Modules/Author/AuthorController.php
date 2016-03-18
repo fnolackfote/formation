@@ -9,6 +9,7 @@
 
 namespace App\Frontend\Modules\Author;
 
+use \OCFram\MainController;
 use \Entity\Author;
 use \FormBuilder\AuthorFormBuilder;
 use \OCFram\BackController;
@@ -17,8 +18,11 @@ use \OCFram\FormHandler;
 
 class AuthorController extends BackController
 {
+    use MainController;
+
     public function executeNewAuthor(HTTPRequest $request)
     {
+        $this->createMenu();
         $this->page->addVar('title', 'Nouvel Auteur');
 
         if($request->method() == 'POST') {
@@ -51,7 +55,8 @@ class AuthorController extends BackController
                     $this->app->user()->setRule($author->FAC_rule());
                     $this->app->user()->setAuthenticated(true);
                     $this->app->user()->setFlash('Nouvel Utilisateur/Auteur Crée !');
-                    $this->app->httpResponse()->redirect('/admin/');
+                    //$this->app->httpResponse()->redirect('/admin/');
+                    $this->app->httpResponse()->redirect($this->app->getHref('index','Backend', 'News'));
                 }
             } else {
                 $this->page->addVar('errorPass', "Les mots de passe doivent être identique");
@@ -61,7 +66,8 @@ class AuthorController extends BackController
             $this->page->addVar('title', 'Nouvel Auteur');
         } else {
             $this->app->user()->setFlash('Vous avez deja un compte. Fermez la session actuelle !');
-            $this->app->httpResponse()->redirect('.');
+            //$this->app->httpResponse()->redirect('.');
+            $this->app->httpResponse()->redirect($this->app->getHref('index','Frontend', 'News'));
         }
     }
 
@@ -72,19 +78,15 @@ class AuthorController extends BackController
      */
     public function executeDetail(HTTPRequest $request)
     {
-        if($this->app->user()->isAuthenticated()) {
-            $author_id = $request->getData('author_id');
-            $userPost = $this->managers->getManagerOf('Author')->getAuthorcUniqueByAuthorcId($author_id);
+        $this->createMenu();
+        $this->redirectUser();
+        $author_id = $request->getData('author_id');
+        $userPost = $this->managers->getManagerOf('Author')->getAuthorcUniqueByAuthorcId($author_id);
 
-            $this->page->addVar('author', $userPost);
-            $this->page->addVar('news_author_a', $this->managers->getManagerOf('News')->getNewscByUsingAuthorId($author_id));
-            $this->page->addVar('comment_author_a', $this->managers->getManagerOf('Comments')->getCommentcByUsingAuthorId($author_id));
-            $this->page->addVar('title', 'Detail de l\'auteur');
-        }
-        else {
-            $this->app->user()->setFlash('Vous n\'etes connectez. Pour effectuer cette action vous devez vous connecter !');
-            $this->app->httpResponse()->redirect('.');
-        }
+        $this->page->addVar('author', $userPost);
+        $this->page->addVar('news_author_a', $this->managers->getManagerOf('News')->getNewscByUsingAuthorId($author_id));
+        $this->page->addVar('comment_author_a', $this->managers->getManagerOf('Comments')->getCommentcByUsingAuthorId($author_id));
+        $this->page->addVar('title', 'Detail de l\'auteur');
     }
 
     public function executePass()

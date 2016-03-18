@@ -17,12 +17,12 @@ abstract class BackController extends ApplicationComponnent
     protected $view = '';
     protected $managers = null;
 
-    public function __construct(Application $app, $module, $action)
+    public function __construct(Application $app, $module, $action, $format='html')
     {
         parent::__construct($app);
 
         $this->managers = new Managers('PDO', PDOFactory::getMysqlConnexion());
-        $this->page = new Page($app);
+        $this->page = new Page($app, $format);
 
         $this->setModule($module);
         $this->setAction($action);

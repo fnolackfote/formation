@@ -15,6 +15,7 @@ class MobileDetectController extends BackController
 {
     public function executeDetect()
     {
+        $this->createMenu();
         $detect = new \Mobile_Detect();
         $detecter = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
 

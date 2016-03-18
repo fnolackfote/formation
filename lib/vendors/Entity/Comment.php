@@ -87,7 +87,7 @@ class Comment extends Entity
 
     public function FCC_email()
     {
-        return html_entity_decode(trim($this->FCC_email));
+        return htmlentities(trim($this->FCC_email));
     }
 
     public function FCC_fk_FAC()
@@ -102,7 +102,7 @@ class Comment extends Entity
 
     public function FCC_content()
     {
-        return html_entity_decode(trim($this->FCC_content));
+        return htmlentities(trim($this->FCC_content));
     }
 
     public function FCC_fk_FNC()

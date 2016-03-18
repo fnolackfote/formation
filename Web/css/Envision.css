@@ -124,6 +124,12 @@ td {
 	border-left: 1px solid #FFF;
 	border-bottom: solid 1px #ffffff;
     text-align: center;
+	word-break: break-all;
+	word-wrap: break-word;
+	-ms-word-wrap: break-word;
+}
+tr:nth-child(even) {
+	background-color: lightgrey;
 }
 form td {
     text-align: left;
@@ -425,17 +431,7 @@ footer a {
 	color: midnightblue;
 	font-size: small;
 }
-fieldset {
-	word-break: break-all;
-	word-wrap: normal;
-	-ms-word-wrap: normal;
-}
-#news-content, #comment-content {
-	word-break: break-all;
-	word-wrap: normal;
-	-ms-word-wrap: normal;
-}
-#news-header {
+#news-content, #comment-content, fieldset, #news-header {
 	word-break: break-all;
 	word-wrap: normal;
 	-ms-word-wrap: normal;

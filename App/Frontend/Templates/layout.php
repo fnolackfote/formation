@@ -7,15 +7,13 @@
  */
 ?>
 
-
 <!DOCTYPE html>
 <html>
     <head>
-        <title>
-            <?php /** @var string $title */ ?>
-            <?= isset($title) ? $title : 'Mon super site' ?></title>
+        <title><?= isset($title) ? $title : 'Mon super site' ?></title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="/css/Envision.css" type="text/css" />
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
     </head>
 
     <body>
@@ -26,24 +24,16 @@
             </header>
             <nav>
                 <ul>
-                    <li><a href="/">Accueil</a></li>
-
-                    <?php /** @var \OCFram\User $user */ ?>
-                    <?php if($user->isAuthenticated()) { ?>
-                    <li><a href="/admin/">Admin</a></li>
-                    <li><a href="/admin/news-insert.html">Ajouter une news</a></li>
-                    <?php }
-                    else {?>
-                    <li><a href="/newAuthor">Inscription</a></li>
+                    <?php foreach($menu as $key => $link) { ?>
+                        <li><a href="<?= $link ?>"><?= $key ?></a></li>
                     <?php } ?>
-                    <li><a href="/admin/logout/"> <?php echo ($user->isAuthenticated()) ? 'Déconnexion' : 'Connexion'; ?></a></li>
                 </ul>
             </nav>
 
             <div id="content-wrap">
                 <section id="main">
                     <?php if ($user->hasFlash()) echo '<p style="text-align: center;">', $user->getFlash(), '</p>'; ?>
-                     <?php /** @var \OCFram\Page $content */ ?>
+                    <?php /** @var \OCFram\Page $content */ ?>
                     <?= $content ?>
                 </section>
                 <div id="content-user-master">
@@ -55,5 +45,4 @@
             <footer></footer>
         </div>
     </body>
-
 </html>

@@ -8,11 +8,18 @@
 
 namespace OCFram;
 
-
 class Page extends ApplicationComponnent
 {
     protected $contentFile;
+    protected $format = 'html';
     protected $vars = [];
+
+    public function __construct(Application $app, $format)
+    {
+        parent::__construct($app);
+
+        $this->format = $format;
+    }
 
     public function addVar($var, $value)
     {
@@ -34,9 +41,14 @@ class Page extends ApplicationComponnent
 
         extract($this->vars);
 
-        ob_start();
+        if($this->format == 'json') {
+           //echo $this->contentFile;
             require $this->contentFile;
-        $content = ob_get_clean();
+            return $json;
+        }
+            ob_start();
+                require $this->contentFile;
+            $content = ob_get_clean();
 
         ob_start();
             require __DIR__.'/../../App/'.$this->app->name().'/Templates/layout.php';
@@ -49,10 +61,8 @@ class Page extends ApplicationComponnent
         {
             throw new \InvalidArgumentException('La vue spécifiée est invalide');
         }
-
         $this->contentFile = $contentFile;
     }
-
 }
 
 ?>

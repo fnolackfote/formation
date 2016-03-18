@@ -12,17 +12,19 @@ namespace OCFram;
 class Route
 {
     protected $action;
+    protected $format;
     protected $module;
     protected $url;
     protected $varsNames;
     protected $vars = [];
 
-    public function __construct($url, $module, $action, array $varsNames)
+    public function __construct($url, $module, $action, array $varsNames, $format)
     {
         $this->setUrl($url);
         $this->setModule($module);
         $this->setAction($action);
         $this->setVarsNames($varsNames);
+        $this->setFormat($format);
     }
 
     public function hasVars()
@@ -58,11 +60,24 @@ class Route
         }
     }
 
+    public function url()
+    {
+        return $this->url;
+    }
+
     public function setUrl($url)
     {
         if (is_string($url))
         {
             $this->url = $url;
+        }
+    }
+
+    public function setFormat($format)
+    {
+        if (is_string($format))
+        {
+            $this->format = $format;
         }
     }
 
@@ -89,6 +104,11 @@ class Route
     public function vars()
     {
         return $this->vars;
+    }
+
+    public function format()
+    {
+        return $this->format;
     }
 
     public function varsNames()
