@@ -46,3 +46,20 @@ Actually, you need to enter manually the value of a href attribute according to 
 What happens if tomorrow i decided to edit a route ?
 All your code is break down.
 This part consist to add a functionnality for ask a route for a Controller and an Action using a function. Replace the manually entered href by a call of this function.
+
+# 7 - Centralisation - gestion des composants génériques du site
+* Mettre en place une centralisation pour la gestion des composants génériques du site.
+* Actuellement, le menu est géré dans le layout. On pourrait le faire évoluer, avec des parties à afficher en fonction du membre connecté. Il faudrait contrôler le menu par le code.
+* Idem pour la gestion de cookies pour la reconnexion, pour la redirection automatique en cas de non connexion lors de certaines actions, etc.
+* En fait, il faudrait gérer la centralisation des actions des contrôleurs dans un nouvel élément du framework
+* Il faut créer un nouveau composant (ne pas le mettre dans Application ou autre)
+
+
+# 8 - Add Feature : Ajax ! Flower Party :)
+* Actuellement, toutes les pages retournées par les applications (Front et Back) retournent des pages générées en HTML. 
+* Faire en sorte que lorsque l'on veut un retour JSON parfait, on puisse l'avoir à la demande. 
+* Dans un premier temps, déterminer quel process va permettre de déterminer le type/format de retour que l'on attend. Valider cette approche avec Baptiste ou moi-même.
+* Dans un second temps mettre en place un test bateau selon le principe arrêté.
+* 
+* Construire une route par laquelle on pourra afficher du contenu JSON, XML, etc ...
+* Mettre le formulaire de commentaire en dessous de la page de présentation de la news.
