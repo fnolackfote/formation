@@ -60,3 +60,6 @@ This part consist to add a functionnality for ask a route for a Controller and a
 * Faire en sorte que lorsque l'on veut un retour JSON parfait, on puisse l'avoir à la demande. 
 * Dans un premier temps, déterminer quel process va permettre de déterminer le type/format de retour que l'on attend. Valider cette approche avec Baptiste ou moi-même.
 * Dans un second temps mettre en place un test bateau selon le principe arrêté.
+* 
+* Construire une route par laquelle on pourra afficher du contenu JSON, XML, etc ...
+* Mettre le formulaire de commentaire en dessous de la page de présentation de la news.
