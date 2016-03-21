@@ -187,22 +187,14 @@ class NewsController extends BackController
 
         $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
 
-        /*var_dump($comment);
-        var_dump($this->app->user()->sessionUser());
-        die();*/
         $this->redirectUser();
         //if($this->app->user()->sessionUser() == $comment->FCC_fk_FAC()) {
         if ($formHandler->process()) {
             $this->app->user()->setFlash('Le commentaire a bien été modifié');
-            $this->app->httpResponse()->redirect('/comment-'.$comment->FCC_fk_FNC().'.html');
-            //$this->app->httpResponse()->redirect($this->app->getHref('index','Frontend',  $comment->FCC_fk_FNC()));
+            $this->app->httpResponse()->redirect('/news-'.$comment->FCC_fk_FNC().'.html');
+            //$this->app->httpResponse()->redirect($this->app->getHref('testJSON','Frontend', 'News'));
         }
         $this->page->addVar('form', $form->createView());
-        /*}
-        else {
-            $this->app->user()->setFlash('Vous n\'avez aucun droit sur ce commentaire.');
-            $this->app->httpResponse()->redirect($this->app->getHref('index','Frontend', 'News'));
-        }*/
     }
 
     /**
@@ -215,11 +207,12 @@ class NewsController extends BackController
             $fcc_id = $request->getData('id');
         }
         $comment = $this->managers->getManagerOf('Comments')->get($fcc_id);                 //Je recupere le comment par son id
+        $id = $comment->FCC_fk_FNC();
         if($this->app->user()->sessionUser() == \Entity\Author::RULE_ADMIN | $this->app->user()->sessionUser() == (int)$comment->FCC_fk_FAC()) {
             $this->managers->getManagerOf('Comments')->delete($fcc_id);
             $this->app->user()->setFlash('Le commentaire a bien été supprimé !');
-            $this->app->httpResponse()->redirect('/comment-'.$comment->FCC_fk_FNC().'.html');
-            //$this->app->httpResponse()->redirect($this->app->getHref('index','Frontend', 'Comment', $comment->FCC_fk_FNC()));
+            $this->app->httpResponse()->redirect('/news-'.$id.'.html');
+            //$this->app->httpResponse()->redirect($this->app->getHref('testJSON','Frontend', 'News'));
         }
     }
 }
