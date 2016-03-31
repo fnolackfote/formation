@@ -70,7 +70,6 @@ abstract class AuthorManager extends Manager
     public function save(Author $author)
     {
         if($author->isValid() && $author->isValidConnectify())
-        //if(1)
         {
             $author->isNew() ? $this->add($author) : $this->modify($author);
         }

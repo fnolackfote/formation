@@ -12,6 +12,7 @@
     <meta charset="utf-8" />
 </head>
 <body>
+<h1><?= $title ?></h1>
 <?php
     foreach($list_of_news as $news)
     {

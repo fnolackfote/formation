@@ -26,6 +26,13 @@ class Form
         return $this;
     }
 
+    /**
+     * @return Field[]
+     */
+    public function getField_a() {
+        return $this->fields;
+    }
+
     public function createView()
     {
         $view = '';

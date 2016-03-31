@@ -8,6 +8,7 @@
 
 namespace App\Frontend\Modules\News;
 
+use OCFram\Form;
 use \OCFram\MainController;
 use \FormBuilder\CommentFormBuilder;
 use \OCFram\BackController;
@@ -19,11 +20,11 @@ class NewsController extends BackController
 {
     use MainController;
 
-    public function executeTestJSON(HTTPRequest $request)
+    public function executeNewComment(HTTPRequest $request)
     {
         if($request->method() == 'POST') {
             $comment = new Comment([
-                //'FCC_fk_FNC' => $_SESSION['news_id'],
+                'FCC_fk_FNC' => $request->postData('FCC_fk_FNC'),
                 'FCC_email' => empty($request->postData('FCC_email')) ? '' : $request->postData('FCC_email'),
                 'FCC_username' => $request->postData('FCC_username'),
                 'FCC_content' => $request->postData('FCC_content')
@@ -42,7 +43,16 @@ class NewsController extends BackController
         {
             $this->page()->addVar('comment',$comment);
         }
-//        $this->page()->addVar('comment',$comment);
+        $error_a = [];
+
+        /** @var Form $form */
+        foreach($form->getField_a() as $Field) {
+            foreach($Field->validators() as $validator) {
+                if ($validator->errorMessage())
+                    $error_a[$Field->name()][] = $validator->errorMessage();
+            }
+        }
+        $this->page()->addVar('error_a',$error_a);
     }
 
     public function executeIndex()
@@ -67,7 +77,6 @@ class NewsController extends BackController
                 $news->setFNC_content($debut);
             }
         }
-
         $this->page->addVar('list_of_news', $list_of_news);
     }
 
@@ -78,11 +87,12 @@ class NewsController extends BackController
     public function executeShow(HTTPRequest $request)
     {
         $this->createMenu();
+        $number_of_comment = $this->app()->config()->get('nombre_comment');
         $fnc_id = $request->getData('FNC_id');
         $_SESSION['news_id'] = $fnc_id;
         $news = $this->managers->getManagerOf('News')->getNewscUniqueUsingNewsId($fnc_id);
         $userPostNews = $this->managers->getManagerOf('Author')->getAuthorcByNewsId($fnc_id);
-        $commentNews = $this->managers->getManagerOf('Comments')->getListOf($fnc_id);
+        $commentNews = $this->managers->getManagerOf('Comments')->getListOf($fnc_id, $number_of_comment);
 
         foreach($commentNews as $comment) {
             $userPostComment[$comment->FCC_id()] = $this->managers->getManagerOf('Author')->getAuthorcUniqueByAuthorcId($comment->FCC_fk_FAC());
@@ -92,7 +102,6 @@ class NewsController extends BackController
         {
             $this->app->httpResponse()->redirect404();
         }
-
 
         $comment = new Comment;
         $comment->setFCC_fk_FNC($fnc_id);
@@ -109,6 +118,24 @@ class NewsController extends BackController
         $this->page->addVar('news', $news);
         $this->page->addVar('author', $userPostNews);
         $this->page->addVar('comments', $commentNews);
+        if(!empty($userPostComment)) {
+            $this->page->addVar('authorComment', $userPostComment);
+        }
+    }
+
+    public function executeShowComment(HTTPRequest $request)
+    {
+        $number_of_comment = $this->app()->config()->get('nombre_comment');
+//        $id = 340;
+        $id = $request->getData('id');
+        $fnc_id = $_SESSION['news_id'];
+        $commentNews = $this->managers->getManagerOf('Comments')->getListOf($fnc_id, $number_of_comment, $id);
+
+        foreach($commentNews as $comment) {
+            $userPostComment[$comment->FCC_id()] = $this->managers->getManagerOf('Author')->getAuthorcUniqueByAuthorcId($comment->FCC_fk_FAC());
+        }
+
+        $this->page->addVar('comment_a', $commentNews);
         if(!empty($userPostComment)) {
             $this->page->addVar('authorComment', $userPostComment);
         }

@@ -64,8 +64,7 @@ abstract class CommentsManager extends Manager
      */
     public function save(Comment $comment)
     {
-        if($comment->isValid())
-        {
+        if($comment->isValid()){
             $comment->isNew() ? $this->add($comment) : $this->modify($comment);
         }
         else

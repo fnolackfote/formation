@@ -74,6 +74,9 @@ abstract class Field
         return $this->length;
     }
 
+    /**
+     * @return Validator[]
+     */
     public function validators()
     {
         return $this->validators;

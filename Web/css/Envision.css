@@ -458,3 +458,7 @@ footer a {
 .detail-comment-content {
 	margin-left: 12px;
 }
+.errortext{
+	color: salmon;
+	margin: -10px auto;
+}

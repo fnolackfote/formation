@@ -44,8 +44,9 @@ abstract class Application
                     $vars = explode(',', $route->getAttribute('vars'));
                     $matchedRoute = $router->getRoute($this->httpRequest->requestURI());
                     $_GET = array_merge($_GET, $matchedRoute->vars());
-                    //$search = '([0-9]+)';
-                    //$url_preg = str_replace($search, $vars, $url);
+//                    $search = '([0-9]+)';
+//                    for($i=0; $i < count($vars); $i++)
+//                        $url = str_replace($search, $vars[$i], $url);
                 }
                 // TODO
                 $router->addRoute(new Route($url, $module, $action, $vars, 'html'));
@@ -54,7 +55,6 @@ abstract class Application
                 $search = '\\';
                 $replace = '';
                 return str_replace($search, $replace, $url);
-                //return $router->getRoute($url)->url();
             }
         }
     }

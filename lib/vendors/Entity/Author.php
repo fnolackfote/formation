@@ -37,17 +37,17 @@ class Author extends Entity
 
     public function FAC_firstname()
     {
-        return htmlentities(trim($this->FAC_firstname));
+        return $this->FAC_firstname;
     }
 
     public function FAC_lastname()
     {
-        return htmlentities(trim($this->FAC_lastname));
+        return $this->FAC_lastname;
     }
 
     public function FAC_username()
     {
-        return htmlentities(trim($this->FAC_username));
+        return $this->FAC_username;
     }
 
     public function FAC_id()
@@ -57,17 +57,17 @@ class Author extends Entity
 
     public function FAC_password()
     {
-        return htmlentities(trim($this->FAC_password));
+        return $this->FAC_password;
     }
 
     public function password()
     {
-        return htmlentities(trim($this->password));
+        return $this->password;
     }
 
     public function FAC_email()
     {
-        return htmlentities(trim($this->FAC_email));
+        return $this->FAC_email;
     }
 
     public function FAC_rule()
@@ -82,7 +82,7 @@ class Author extends Entity
 
     public function setFAC_email($email)
     {
-        $this->FAC_email = htmlentities(trim($email));
+        $this->FAC_email = $email;
     }
 
     public function setFAC_id($id)
@@ -92,7 +92,7 @@ class Author extends Entity
 
     public function setFAC_firstname($firstname)
     {
-        $this->FAC_firstname = htmlentities(trim($firstname));
+        $this->FAC_firstname = $firstname;
     }
 
     public function setFAC_lastname($lastname)

@@ -123,15 +123,31 @@ class CommentsManagerPDO extends CommentsManager
      * @param int $news l'id de la news
      * @return mixed
      */
-    public function getListOf($news_id)
+    public function getListOf($news_id, $limit = -1, $id = -1)
     {
         if(!ctype_digit($news_id))
         {
             throw new \InvalidArgumentException('L\'identifiant de la news passé doit être un entier valide.');
         }
 
-        $req = $this->dao->prepare('SELECT FCC_id, FCC_content, FCC_fk_FAC, FCC_date, FCC_fk_FNC, FCC_email, FCC_username FROM t_frm_commentc WHERE FCC_fk_FNC = :news ORDER BY FCC_date DESC');
+        $query = 'SELECT FCC_id, FCC_content, FCC_fk_FAC, FCC_date, FCC_fk_FNC, FCC_email, FCC_username FROM t_frm_commentc WHERE';
 
+        if($id != -1)
+        {
+            $query .= ' FCC_id < :id AND';
+        }
+        $query .= ' FCC_fk_FNC = :news  ORDER BY FCC_date DESC';
+
+        if($limit != -1)
+        {
+            $query .= ' LIMIT '.(int)$limit;
+        }
+
+        $req = $this->dao->prepare($query);
+        if($id != -1)
+        {
+            $req->bindValue(':id', $id, \PDO::PARAM_INT);
+        }
         $req->bindValue(':news', $news_id, \PDO::PARAM_INT);
 
         $req->execute();
@@ -146,6 +162,40 @@ class CommentsManagerPDO extends CommentsManager
         }
 
         return $comments;
+    }
+
+    public function getListOfComment_a($news_id, $limit = -1, $id = -1)
+    {
+        if(!ctype_digit($news_id))
+        {
+            throw new \InvalidArgumentException('L\'identifiant de la news passé doit être un entier valide.');
+        }
+
+        $query = 'SELECT FCC_id, FCC_content, FCC_fk_FAC, FCC_date, FCC_fk_FNC, FCC_email, FCC_username FROM t_frm_commentc WHERE';
+
+        if($id != -1)
+        {
+            $query .= ' FCC_id < :id AND';
+        }
+        $query .= ' FCC_fk_FNC = :news  ORDER BY FCC_date DESC';
+
+        if($limit != -1)
+        {
+            $query .= ' LIMIT '.(int)$limit;
+        }
+
+        $req = $this->dao->prepare($query);
+        if($id != -1)
+        {
+            $req->bindValue(':id', $id, \PDO::PARAM_INT);
+        }
+        $req->bindValue(':news', $news_id, \PDO::PARAM_INT);
+
+        $req->execute();
+
+        $req->setFetchMode(\PDO::FETCH_ASSOC);
+
+        return $req->fetchAll();
     }
 
     /**
